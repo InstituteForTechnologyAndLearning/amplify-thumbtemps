@@ -23,7 +23,7 @@
       />
     </div>
     <zi-button class="mr-6" type="primary" :loading="isSending" auto>Sign In</zi-button>
-    <router-link to="signup">Need an account? Sign up!</router-link>
+    <router-link to="signup">Need an account? Sign up</router-link>
   </form>
 </template>
 
