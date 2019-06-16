@@ -18,9 +18,14 @@ const router = new Router({
       component: Home
     },
     {
-      path: '/auth',
-      name: 'auth',
-      component: () => import('./views/Auth.vue')
+      path: '/login',
+      name: 'login',
+      component: () => import('./views/auth/Login.vue')
+    },
+    {
+      path: '/signup',
+      name: 'signup',
+      component: () => import('./views/auth/SignUp.vue')
     },
     {
       path: '/about',

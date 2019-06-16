@@ -29,14 +29,15 @@
         <router-link to="/" class="nav-link">Home</router-link>
         <router-link to="/about" class="nav-link">About</router-link>
       </div>
-      <div>
+      <div v-if="!$store.state.user.isAuthenticated">
+        <router-link to="/login" class="nav-link">Login</router-link>
         <router-link
-          v-if="!$store.state.user.isAuthenticated"
-          to="/auth"
+          to="/signup"
           class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0"
-        >Login/Register</router-link>
+        >Sign Up</router-link>
+      </div>
+      <div v-if="$store.state.user.isAuthenticated">
         <button
-          v-if="$store.state.user.isAuthenticated"
           @click="logout"
           class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0"
         >Logout</button>

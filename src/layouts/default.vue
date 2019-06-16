@@ -1,17 +1,15 @@
 <template>
-  <Bus>
+  <div>
     <Navigation/>
     <router-view></router-view>
-  </Bus>
+  </div>
 </template>
 
 <script>
-import Bus from "@/components/Bus";
 import Navigation from "@/components/Navigation";
 
 export default {
   components: {
-    Bus,
     Navigation
   }
 };

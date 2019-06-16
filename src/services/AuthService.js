@@ -71,7 +71,7 @@ class AuthService {
 
       return user;
     } catch (err) {
-      return err;
+      throw err;
     }
   }
 
@@ -80,7 +80,7 @@ class AuthService {
       const confirmed = await Auth.confirmSignUp(username, code, { forceAliasCreation: true });
       return await this.signIn({ username, password });
     } catch (err) {
-      return err;
+      throw err;
     }
   }
 
