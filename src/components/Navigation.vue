@@ -52,7 +52,9 @@ export default {
   methods: {
     async logout() {
       try {
+        const username = this.$store.state.user.current.username;
         await AuthService.signOut();
+        this.$Toast.success(`See you next time, ${username}`);
       } catch (error) {
         this.$Toast.danger(error);
       }
