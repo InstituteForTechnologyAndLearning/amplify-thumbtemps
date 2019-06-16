@@ -1,0 +1,8 @@
+{
+	"auth": {
+		"thumbtemps29c934a1": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation"
+		}
+	}
+}

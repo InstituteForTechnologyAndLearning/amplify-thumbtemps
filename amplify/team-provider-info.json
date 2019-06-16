@@ -1,0 +1,19 @@
+{
+    "dev": {
+        "awscloudformation": {
+            "AuthRoleName": "thumbtemps-dev-20190613184738-authRole",
+            "UnauthRoleArn": "arn:aws:iam::229397476429:role/thumbtemps-dev-20190613184738-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::229397476429:role/thumbtemps-dev-20190613184738-authRole",
+            "Region": "us-east-2",
+            "DeploymentBucketName": "thumbtemps-dev-20190613184738-deployment",
+            "UnauthRoleName": "thumbtemps-dev-20190613184738-unauthRole",
+            "StackName": "thumbtemps-dev-20190613184738",
+            "StackId": "arn:aws:cloudformation:us-east-2:229397476429:stack/thumbtemps-dev-20190613184738/3ef818f0-8e2d-11e9-b0a1-062853107e54"
+        },
+        "categories": {
+            "auth": {
+                "thumbtemps29c934a1": {}
+            }
+        }
+    }
+}
