@@ -12,7 +12,7 @@
     <div class="auth">
       <router-link to="/login">Login</router-link>
       <router-link to="/signup" class="btn-link">
-        <zi-button shadow auto>Sign Up</zi-button>
+        <zi-button auto type="success">Sign Up</zi-button>
       </router-link>
     </div>
   </header>
@@ -87,7 +87,8 @@ header {
     text-decoration: none;
     transition: color 300ms ease;
 
-    &:hover {
+    &:hover,
+    &.router-link-active {
       color: theme("colors.white");
     }
   }
