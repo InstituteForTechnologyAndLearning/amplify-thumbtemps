@@ -6,6 +6,12 @@ export default {
     isAuthenticated: false,
     current: null
   },
+  getters: {
+    groups(state) {
+      if (!state.current) return [];
+      return state.current.signInUserSession.accessToken.payload['cognito:groups'] || [];
+    }
+  },
   mutations: {
     set(state, user) {
       state.isAuthenticated = !!user;

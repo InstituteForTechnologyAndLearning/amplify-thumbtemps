@@ -88,7 +88,7 @@ export default {
         this.form.clear();
 
         this.$Toast.success(`Welcome to ThumbTemps, ${user.username}`);
-        this.$router.push("home");
+        this.$router.push("/");
 
         this.isSending = false;
         this.isConfirming = false;

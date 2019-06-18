@@ -50,7 +50,7 @@ export default {
         this.form.clear();
         this.isSending = false;
         this.$Toast.success(`Welcome back, ${user.username}`);
-        this.$router.push("home");
+        this.$router.push("/");
       } catch (err) {
         this.isSending = false;
         this.$Toast.danger(err.message);

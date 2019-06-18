@@ -34,6 +34,11 @@ const router = new Router({
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
+    },
+    {
+      path: '/admin',
+      name: 'admin',
+      component: () => import('./views/admin/Index.vue')
     }
   ]
 });
@@ -77,7 +82,7 @@ async function beforeEach(to, from, next) {
   callMiddleware(middleware, to, from, (...args) => {
     // Set the application layout only if "next()" was called with no args.
     if (args.length === 0) {
-      router.app.setLayout(components[0].layout || '');
+      router.app.setLayout((components[0].default || {}).layout || '');
     }
 
     next(...args);

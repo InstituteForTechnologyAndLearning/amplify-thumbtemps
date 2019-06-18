@@ -28,6 +28,7 @@
       <div class="text-sm lg:flex-grow">
         <router-link to="/" class="nav-link">Home</router-link>
         <router-link to="/about" class="nav-link">About</router-link>
+        <router-link v-if="isAdmin" to="/admin" class="nav-link">Admin</router-link>
       </div>
       <div v-if="!$store.state.user.isAuthenticated">
         <router-link to="/login" class="nav-link">Login</router-link>
@@ -50,6 +51,12 @@
 import AuthService from "@/services/AuthService";
 
 export default {
+  computed: {
+    isAdmin() {
+      let groups = this.$store.getters["user/groups"];
+      return groups.indexOf("admin") > -1;
+    }
+  },
   methods: {
     async logout() {
       try {
