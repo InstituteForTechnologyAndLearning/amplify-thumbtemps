@@ -1,7 +1,7 @@
 <template>
   <div>
     <form v-if="!isConfirming" @submit.prevent="signUp" class="w-full">
-      <div class="w-full mb-6 text-gray-600">
+      <div class="form-group">
         <label for="username" class="block">Username</label>
         <zi-input
           class="w-full"
@@ -11,7 +11,7 @@
         />
         <small v-if="form.username.error" class="text-red-500">{{ form.username.error }}</small>
       </div>
-      <div class="w-full mb-6 text-gray-600">
+      <div class="form-group">
         <label for="email" class="block">Email</label>
         <zi-input
           class="w-full"
@@ -22,7 +22,7 @@
         />
         <small v-if="form.email.error" class="text-red-500">{{ form.email.error }}</small>
       </div>
-      <div class="w-full mb-6 text-gray-600">
+      <div class="form-group">
         <label for="password" class="block">Password</label>
         <zi-input
           class="w-full"
@@ -33,11 +33,13 @@
         />
         <small v-if="form.password.error" class="text-red-500">{{ form.password.error }}</small>
       </div>
-      <zi-button class="mr-6" type="primary" :loading="isSending" auto>Sign Up</zi-button>
-      <router-link to="login">Have an account? Login</router-link>
+      <div class="mt-8 text-center">
+        <zi-button class="mr-6 w-full" type="primary" :loading="isSending">Sign Up</zi-button>
+        <router-link to="login" class="inline-block mt-6">Have an account? Login</router-link>
+      </div>
     </form>
     <form v-if="isConfirming" @submit.prevent="confirmSignUp" class="w-full">
-      <div class="w-full mb-6 text-gray-600">
+      <div class="form-group">
         <label for="username" class="block">Username</label>
         <zi-input
           class="w-full"
@@ -46,11 +48,13 @@
           name="username"
         />
       </div>
-      <div class="w-full mb-6 text-gray-600">
+      <div class="form-group">
         <label for="code" class="block">Confirmation Code</label>
         <zi-input class="w-full" placeholder="code" v-model="form.code.value" name="code"/>
       </div>
-      <zi-button type="primary" :loading="isSending" auto>Confirm</zi-button>
+      <div class="mt-8 text-center">
+        <zi-button class="w-full" type="primary" :loading="isSending">Confirm</zi-button>
+      </div>
     </form>
   </div>
 </template>

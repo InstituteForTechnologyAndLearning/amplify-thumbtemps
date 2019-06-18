@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent="signIn" class="w-full">
-    <div class="w-full mb-6 text-gray-600">
+    <div class="form-group">
       <label for="username" class="block">Username</label>
       <zi-input
         class="w-full"
@@ -9,7 +9,7 @@
         name="username"
       />
     </div>
-    <div class="w-full mb-6 text-gray-600">
+    <div class="form-group">
       <div class="flex justify-between">
         <label for="password" class="block">Password</label>
         <router-link to="/forgot-password">Forget?</router-link>
@@ -22,8 +22,10 @@
         name="password"
       />
     </div>
-    <zi-button class="mr-6" type="primary" :loading="isSending" auto>Sign In</zi-button>
-    <router-link to="signup">Need an account? Sign up</router-link>
+    <div class="mt-8 text-center">
+      <zi-button class="mr-6 w-full" type="primary" :loading="isSending" auto>Sign In</zi-button>
+      <router-link to="signup" class="inline-block mt-6">Need an account? Sign up</router-link>
+    </div>
   </form>
 </template>
 

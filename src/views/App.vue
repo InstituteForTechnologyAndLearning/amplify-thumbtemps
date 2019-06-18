@@ -60,3 +60,13 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+a {
+  color: theme("colors.blue");
+}
+
+.form-group {
+  @apply w-full mb-6 text-gray-4;
+}
+</style>
