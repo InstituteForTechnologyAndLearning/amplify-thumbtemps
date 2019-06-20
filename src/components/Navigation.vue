@@ -49,7 +49,7 @@ header {
   grid-template-areas: "logo nav auth";
   grid-template-columns: auto 1fr 200px;
   align-items: center;
-  padding: theme("padding.3") 0;
+  padding: theme("padding.3") theme("padding.6");
   position: relative;
 
   &:before {
