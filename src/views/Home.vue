@@ -1,25 +1,25 @@
 <template>
   <div class="home">
-    <div class="hero-background">
+    <parallax-container class="hero-background">
       <div class="imgloaded hero-container">
         <section class="hero bg-drak">
-          <div class="glitch">
+          <parallax-element class="glitch" :parallaxStrength="-10" :type="'translation'">
             <div class="glitch__img"></div>
             <div class="glitch__img"></div>
             <div class="glitch__img"></div>
             <div class="glitch__img"></div>
             <div class="glitch__img"></div>
-          </div>
-          <div class="hero-content p-12">
+          </parallax-element>
+          <parallax-element class="hero-content p-12" :parallaxStrength="20" :type="'translation'">
             <div>
               <h3 class="content__text text-white text-2xl">WELCOME TO</h3>
               <h1 class="content__title text-white text-5xl">THUMBTEMPS</h1>
             </div>
-          </div>
+          </parallax-element>
           <!-- <img src="../assets/images/thumb-100-the-division-1.jpg"> -->
         </section>
       </div>
-    </div>
+    </parallax-container>
   </div>
 </template>
 
@@ -64,7 +64,7 @@ export default {
     );
     top: 0;
     left: 0;
-    z-index: 60;
+    z-index: 50;
   }
 
   &:after {
@@ -75,7 +75,7 @@ export default {
     background: linear-gradient(to top, theme("colors.drak"), transparent);
     bottom: 0;
     left: 0;
-    z-index: 60;
+    z-index: 50;
   }
 }
 
@@ -85,10 +85,6 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   z-index: 60;
 }
 
