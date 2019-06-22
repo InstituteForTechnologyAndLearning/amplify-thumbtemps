@@ -23,6 +23,7 @@
           <zi-popover-item line></zi-popover-item>
           <zi-popover-item to="/profile">Profile</zi-popover-item>
           <zi-popover-item to="/settings">Settings</zi-popover-item>
+          <zi-popover-item v-if="isAdmin" to="/admin">Admin</zi-popover-item>
           <zi-popover-item command="logout">Logout</zi-popover-item>
         </template>
       </zi-popover>

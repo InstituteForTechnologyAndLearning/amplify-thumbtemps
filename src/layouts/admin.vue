@@ -1,7 +1,11 @@
 <template>
-  <div>
-    <Navigation/>
-    <router-view></router-view>
+  <div class="admin">
+    <div>
+      <Navigation/>
+    </div>
+    <div>
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
@@ -14,3 +18,12 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.admin {
+  display: grid;
+  grid-template-areas: "nav content";
+  grid-template-columns: 300px 1fr;
+}
+</style>
+

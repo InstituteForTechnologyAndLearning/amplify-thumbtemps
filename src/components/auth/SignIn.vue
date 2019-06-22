@@ -7,12 +7,13 @@
         placeholder="username"
         v-model="form.username.value"
         name="username"
+        tabindex="1"
       />
     </div>
     <div class="form-group">
       <div class="flex justify-between">
         <label for="password" class="block">Password</label>
-        <router-link to="/forgot-password">Forget?</router-link>
+        <router-link to="/forgot-password" tabindex="4">Forget?</router-link>
       </div>
       <zi-input
         class="w-full"
@@ -20,10 +21,11 @@
         placeholder="password "
         v-model="form.password.value"
         name="password"
+        tabindex="2"
       />
     </div>
     <div class="mt-8 text-center">
-      <zi-button class="mr-6 w-full" type="primary" :loading="isSending" auto>Sign In</zi-button>
+      <zi-button class="mr-6 w-full" type="primary" :loading="isSending" tabindex="3" auto>Sign In</zi-button>
       <router-link to="signup" class="inline-block mt-6">Need an account? Sign up</router-link>
     </div>
   </form>

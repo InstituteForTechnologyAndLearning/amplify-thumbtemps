@@ -38,7 +38,13 @@ const router = new Router({
     {
       path: '/admin',
       name: 'admin',
-      component: () => import('./views/admin/Index.vue')
+      component: () => import('./views/admin/Index.vue'),
+      children: [
+        {
+          path: 'thumbnails',
+          component: () => import('./views/admin/Thumbnails.vue')
+        }
+      ]
     }
   ]
 });
@@ -82,7 +88,8 @@ async function beforeEach(to, from, next) {
   callMiddleware(middleware, to, from, (...args) => {
     // Set the application layout only if "next()" was called with no args.
     if (args.length === 0) {
-      router.app.setLayout((components[0].default || {}).layout || '');
+      let layout = components[0].layout ? components[0].layout : (components[0].default || {}).layout || '';
+      router.app.setLayout(layout);
     }
 
     next(...args);
@@ -162,13 +169,9 @@ function resolveComponents(components) {
 function getMiddleware(components) {
   const middleware = [ ...globalMiddleware ];
 
-  components.filter((c) => c.middleware).forEach((component) => {
-    if (Array.isArray(component.middleware)) {
-      middleware.push(...component.middleware);
-    }
-    else {
-      middleware.push(component.middleware);
-    }
+  components.filter((c) => (c.middleware ? c.middleware : (c.default || {}).middleware)).forEach((component) => {
+    var mw = component.middleware ? component.middleware : (component.default || {}).middleware;
+    Array.isArray(mw) ? middleware.push(...mw) : middleware.push(mw);
   });
 
   return middleware;

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Admin</h1>
+    <h1>Thumbnails</h1>
   </div>
 </template>
 

@@ -46,6 +46,12 @@ export default {
     this.$store.dispatch("user/load");
   },
 
+  computed: {
+    alert() {
+      return this.$store.state.alert.current;
+    }
+  },
+
   methods: {
     setLayout(layout) {
       if (!layout || !layouts[layout]) {
@@ -57,16 +63,14 @@ export default {
     async getUser() {
       const user = await Auth.currentAuthenticatedUser();
     }
+  },
+
+  watch: {
+    alert(alert) {
+      if (!alert) return;
+
+      this.$Toast.show(alert);
+    }
   }
 };
 </script>
-
-<style lang="scss">
-a {
-  color: theme("colors.blue");
-}
-
-.form-group {
-  @apply w-full mb-6 text-gray-4;
-}
-</style>
