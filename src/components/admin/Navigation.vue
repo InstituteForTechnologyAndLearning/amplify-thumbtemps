@@ -1,10 +1,11 @@
 <template>
   <header class="w-full bg-drak text-white h-screen">
     <div class="logo">
-      <router-link to="/admin">ThumbTemps</router-link>
+      <router-link to="/admin" class="text-white no-underline">ThumbTemps</router-link>
     </div>
     <nav>
       <div class="flex flex-col">
+        <zi-link more to="/" class="mb-6">Return to ThumbTemps</zi-link>
         <router-link to="/admin">Home</router-link>
         <router-link to="/admin/thumbnails">Thumbnails</router-link>
       </div>
@@ -21,8 +22,13 @@
 
 <script>
 import AuthService from "@/services/AuthService";
+import left from "@zeit-ui/vue-icons/packages/left";
 
 export default {
+  components: {
+    left
+  },
+
   computed: {
     email() {
       return this.$store.getters["user/email"];
@@ -71,7 +77,7 @@ nav {
     transition: color 300ms ease;
 
     &:hover,
-    &.router-link-active {
+    &.router-link-exact-active {
       color: theme("colors.white");
     }
   }

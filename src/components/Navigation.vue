@@ -15,7 +15,7 @@
         <zi-button auto type="success">Sign Up</zi-button>
       </router-link>
     </div>
-    <div v-else class="auth">
+    <div v-else class="auth flex justify-end items-center">
       <zi-popover class="flex items-center text-white" align="right" @command="authPopoverClick">
         <v-gravatar class="rounded-full overflow-hidden mr-3" :email="email" :size="32"/>
         <template slot="dropdown">

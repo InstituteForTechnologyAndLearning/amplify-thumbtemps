@@ -18,7 +18,6 @@ export default {
     },
     get({ commit, state }) {
       let alert = state.current;
-      commit('clear');
       return alert;
     }
   }

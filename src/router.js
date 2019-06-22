@@ -38,13 +38,12 @@ const router = new Router({
     {
       path: '/admin',
       name: 'admin',
-      component: () => import('./views/admin/Index.vue'),
-      children: [
-        {
-          path: 'thumbnails',
-          component: () => import('./views/admin/Thumbnails.vue')
-        }
-      ]
+      component: () => import('./views/admin/Index.vue')
+    },
+    {
+      path: '/admin/thumbnails',
+      name: 'adminThumbanils',
+      component: () => import('./views/admin/Thumbnails.vue')
     }
   ]
 });
