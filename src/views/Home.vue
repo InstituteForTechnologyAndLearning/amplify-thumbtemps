@@ -10,16 +10,19 @@
             <div class="glitch__img" :style="glitchStyle"></div>
             <div class="glitch__img" :style="glitchStyle"></div>
           </parallax-element>
-          <parallax-element class="hero-content p-12" :parallaxStrength="20" :type="'translation'">
-            <div class="text-center">
-              <h3 class="content__text text-gray-2">WELCOME TO</h3>
-              <h1 class="content__title text-white">THUMBTEMPS</h1>
-              <p class="content__desc text-gray-2">Free and Editable Thumbnail Templates</p>
-              <div class="content__action mt-6">
-                <zi-button type="success">Start Browsing</zi-button>
+          <div class="hero-content p-12">
+            <div class="hero-gradients"></div>
+            <parallax-element class="p-12" :parallaxStrength="20" :type="'translation'">
+              <div class="text-center">
+                <h3 class="content__text text-gray-2">WELCOME TO</h3>
+                <h1 class="content__title text-white">THUMBTEMPS</h1>
+                <p class="content__desc text-gray-2">Free and Editable Thumbnail Templates</p>
               </div>
+            </parallax-element>
+            <div class="content__action text-center mt-6">
+              <zi-button type="success">Start Browsing</zi-button>
             </div>
-          </parallax-element>
+          </div>
         </section>
         <div class="img-source text-sm">Image owned by: Kojima Productions, Death Stranding</div>
       </div>
@@ -61,30 +64,34 @@ export default {
   position: relative;
   margin: 0 auto;
 
-  &:before {
-    content: "";
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    background: radial-gradient(
-      circle,
-      transparent 15%,
-      theme("colors.drak") 90%
-    );
-    top: 0;
-    left: 0;
+  .hero-gradients {
     z-index: 50;
-  }
 
-  &:after {
-    content: "";
-    width: 100%;
-    height: 50%;
-    position: absolute;
-    background: linear-gradient(to top, theme("colors.drak"), transparent);
-    bottom: 0;
-    left: 0;
-    z-index: 50;
+    &:before {
+      content: "";
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      background: radial-gradient(
+        circle,
+        transparent 15%,
+        theme("colors.drak") 90%
+      );
+      top: 0;
+      left: 0;
+      z-index: 50;
+    }
+
+    &:after {
+      content: "";
+      width: 100%;
+      height: 50%;
+      position: absolute;
+      background: linear-gradient(to top, theme("colors.drak"), transparent);
+      bottom: 0;
+      left: 0;
+      z-index: 50;
+    }
   }
 
   .img-source {
@@ -103,9 +110,9 @@ export default {
   width: 100%;
   height: 100%;
   display: flex;
+  flex-flow: column;
   align-items: center;
   justify-content: center;
-  z-index: 40;
 }
 
 .hero {
