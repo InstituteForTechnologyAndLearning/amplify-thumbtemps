@@ -6,6 +6,7 @@ import Amplify, * as AmplifyModules from 'aws-amplify'
 import { AmplifyPlugin } from 'aws-amplify-vue'
 import awsconfig from './aws-exports'
 import VueMouseParallax from 'vue-mouse-parallax'
+import Gravatar from 'vue-gravatar'
 import ZeitUI from '@zeit-ui/vue'
 import '@zeit-ui/vue/dist/zeit-ui.css'
 import './assets/styles/global.scss'
@@ -17,6 +18,8 @@ Vue.config.productionTip = false
 Vue.use(AmplifyPlugin, AmplifyModules)
 Vue.use(VueMouseParallax)
 Vue.use(ZeitUI)
+
+Vue.component('v-gravatar', Gravatar)
 
 new Vue({
   el: '#app',

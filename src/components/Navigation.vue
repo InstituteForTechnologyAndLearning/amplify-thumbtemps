@@ -9,11 +9,23 @@
       <router-link to="/license">License</router-link>
       <router-link to="/contact">Contact</router-link>
     </nav>
-    <div class="auth">
+    <div v-if="!$store.state.user.isAuthenticated" class="auth">
       <router-link to="/login">Login</router-link>
       <router-link to="/signup" class="btn-link">
         <zi-button auto type="success">Sign Up</zi-button>
       </router-link>
+    </div>
+    <div v-else class="auth">
+      <zi-popover class="flex items-center text-white" align="right" @command="authPopoverClick">
+        <v-gravatar class="rounded-full overflow-hidden mr-3" :email="email" :size="32"/>
+        <template slot="dropdown">
+          <zi-popover-item title>{{ $store.state.user.current.username }}</zi-popover-item>
+          <zi-popover-item line></zi-popover-item>
+          <zi-popover-item to="/profile">Profile</zi-popover-item>
+          <zi-popover-item to="/settings">Settings</zi-popover-item>
+          <zi-popover-item command="logout">Logout</zi-popover-item>
+        </template>
+      </zi-popover>
     </div>
   </header>
 </template>
@@ -26,9 +38,17 @@ export default {
     isAdmin() {
       let groups = this.$store.getters["user/groups"];
       return groups.indexOf("admin") > -1;
+    },
+    email() {
+      return this.$store.getters["user/email"];
     }
   },
   methods: {
+    authPopoverClick(command) {
+      if (command === "logout") {
+        this.logout();
+      }
+    },
     async logout() {
       try {
         const username = this.$store.state.user.current.username;
