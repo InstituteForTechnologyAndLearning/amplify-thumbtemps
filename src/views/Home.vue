@@ -12,10 +12,10 @@
           </parallax-element>
           <parallax-element class="hero-content p-12" :parallaxStrength="20" :type="'translation'">
             <div class="text-center">
-              <h3 class="content__text text-white">WELCOME TO</h3>
+              <h3 class="content__text text-gray-2">WELCOME TO</h3>
               <h1 class="content__title text-white">THUMBTEMPS</h1>
-              <p class="content__desc text-white">Free and Editable Thumbnail Templates</p>
-              <div class="mt-6">
+              <p class="content__desc text-gray-2">Free and Editable Thumbnail Templates</p>
+              <div class="content__action mt-6">
                 <zi-button type="success">Start Browsing</zi-button>
               </div>
             </div>
@@ -56,7 +56,7 @@ export default {
 
 .hero-container {
   width: 100%;
-  max-width: 1920px;
+  max-width: 2080px;
   background: theme("colors.drak");
   position: relative;
   margin: 0 auto;
@@ -105,7 +105,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 60;
+  z-index: 40;
 }
 
 .hero {
@@ -146,7 +146,6 @@ export default {
   animation-timing-function: linear;
   animation-iteration-count: infinite;
   text-align: center;
-  z-index: 60;
 }
 
 .content__title {
@@ -159,7 +158,7 @@ export default {
   margin: 0;
   position: relative;
   padding: 0 theme("padding.6");
-  margin: calc(theme("padding.1") * -1) 0;
+  margin: -0.35rem 0;
   animation-delay: calc(var(--delay-anim) + var(--time-anim) * 0.2);
 }
 
@@ -185,6 +184,13 @@ export default {
   line-height: 1.5;
   padding: 0 theme("padding.6");
   animation-delay: calc(var(--delay-anim) + var(--time-anim) * 0.25);
+  position: relative;
+  z-index: 70;
+}
+
+.content__action {
+  position: relative;
+  z-index: 70;
 }
 
 @media screen and (max-width: 55em) {
