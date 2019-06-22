@@ -4,20 +4,24 @@
       <div class="imgloaded hero-container">
         <section class="hero bg-drak">
           <parallax-element class="glitch" :parallaxStrength="-10" :type="'translation'">
-            <div class="glitch__img"></div>
-            <div class="glitch__img"></div>
-            <div class="glitch__img"></div>
-            <div class="glitch__img"></div>
-            <div class="glitch__img"></div>
+            <div class="glitch__img" :style="glitchStyle"></div>
+            <div class="glitch__img" :style="glitchStyle"></div>
+            <div class="glitch__img" :style="glitchStyle"></div>
+            <div class="glitch__img" :style="glitchStyle"></div>
+            <div class="glitch__img" :style="glitchStyle"></div>
           </parallax-element>
           <parallax-element class="hero-content p-12" :parallaxStrength="20" :type="'translation'">
-            <div>
-              <h3 class="content__text text-white text-2xl">WELCOME TO</h3>
-              <h1 class="content__title text-white text-5xl">THUMBTEMPS</h1>
+            <div class="text-center">
+              <h3 class="content__text text-white">WELCOME TO</h3>
+              <h1 class="content__title text-white">THUMBTEMPS</h1>
+              <p class="content__desc text-white">Free and Editable Thumbnail Templates</p>
+              <div class="mt-6">
+                <zi-button type="success">Start Browsing</zi-button>
+              </div>
             </div>
           </parallax-element>
-          <!-- <img src="../assets/images/thumb-100-the-division-1.jpg"> -->
         </section>
+        <div class="img-source text-sm">Image owned by: Kojima Productions, Death Stranding</div>
       </div>
     </parallax-container>
   </div>
@@ -35,7 +39,12 @@ export default {
   computed: {
     ...mapState({
       user: state => state.user.current
-    })
+    }),
+    glitchStyle() {
+      return {
+        backgroundImage: `url('${require("../assets/images/death-stranding.jpg")}')`
+      };
+    }
   }
 };
 </script>
@@ -76,6 +85,17 @@ export default {
     bottom: 0;
     left: 0;
     z-index: 50;
+  }
+
+  .img-source {
+    background: rgba(0, 0, 0, 0.8);
+    border-top-left-radius: theme("borderRadius.lg");
+    color: theme("colors.gray-3");
+    padding: theme("padding.3");
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    z-index: 80;
   }
 }
 
@@ -119,7 +139,8 @@ export default {
 }
 
 .imgloaded .content__title,
-.imgloaded .content__text {
+.imgloaded .content__text,
+.imgloaded .content__desc {
   animation-name: glitch-anim-text;
   animation-duration: var(--time-anim);
   animation-timing-function: linear;
@@ -129,15 +150,40 @@ export default {
 }
 
 .content__title {
-  font-size: 12vw;
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: theme("borderRadius.lg");
+  font-size: 10vw;
+  font-style: italic;
+  font-weight: bold;
+  line-height: 1.25;
   margin: 0;
   position: relative;
+  padding: 0 theme("padding.6");
+  margin: calc(theme("padding.1") * -1) 0;
   animation-delay: calc(var(--delay-anim) + var(--time-anim) * 0.2);
 }
 
 .content__text {
-  font-size: 1.5em;
-  font-weight: 400;
+  display: inline;
+  font-size: 2vw;
+  font-weight: 500;
+  background: rgba(0, 0, 0, 0.8);
+  border-top-right-radius: theme("borderRadius.lg");
+  border-top-left-radius: theme("borderRadius.lg");
+  line-height: 1.5;
+  padding: 0 theme("padding.6");
+  animation-delay: calc(var(--delay-anim) + var(--time-anim) * 0.225);
+}
+
+.content__desc {
+  display: inline;
+  font-size: 2vw;
+  font-weight: 500;
+  background: rgba(0, 0, 0, 0.8);
+  border-bottom-right-radius: theme("borderRadius.lg");
+  border-bottom-left-radius: theme("borderRadius.lg");
+  line-height: 1.5;
+  padding: 0 theme("padding.6");
   animation-delay: calc(var(--delay-anim) + var(--time-anim) * 0.25);
 }
 
@@ -168,8 +214,9 @@ export default {
   left: calc(-1 * var(--gap-horizontal));
   width: calc(100% + var(--gap-horizontal) * 2);
   height: calc(100% + var(--gap-vertical) * 2);
-  background: url("../assets/images/thumb-100-the-division-1.jpg") no-repeat 50%
-    0;
+  background-repeat: no-repeat;
+  background-position: 50% 0;
+  background-size: 110%;
   background-color: var(--blend-color-1);
   background-size: cover;
   transform: translate3d(0, 0, 0);

@@ -96,5 +96,15 @@ header {
   a.btn-link {
     padding: 0 theme("padding.3");
   }
+
+  .logo {
+    font-style: italic;
+    font-weight: bold;
+    font-size: theme("fontSize.xl");
+
+    a {
+      padding: 0;
+    }
+  }
 }
 </style>
