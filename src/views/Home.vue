@@ -31,6 +31,8 @@
 </template>
 
 <script>
+import Amplify, { API, graphqlOperation } from "aws-amplify";
+import * as queries from "@/graphql/queries";
 import { mapState } from "vuex";
 import HelloWorld from "@/components/HelloWorld.vue";
 
@@ -47,6 +49,25 @@ export default {
       return {
         backgroundImage: `url('${require("../assets/images/death-stranding.jpg")}')`
       };
+    }
+  },
+  async mounted() {
+    try {
+      const categories = await API.graphql(
+        graphqlOperation(queries.listCategorys)
+      );
+      console.log({ categories });
+    } catch (err) {
+      console.log({ catErr: err });
+    }
+
+    try {
+      const thumbnails = await API.graphql(
+        graphqlOperation(queries.listThumbnails)
+      );
+      console.log({ thumbnails });
+    } catch (err) {
+      console.log({ thumErr: err });
     }
   }
 };

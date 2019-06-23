@@ -10,7 +10,7 @@ import { AmplifyEventBus } from "aws-amplify-vue";
 export default {
   created() {
     AmplifyEventBus.$on("authState", info => {
-      console.log({ info });
+      console.log({ info });  
       if (info === "signedIn") {
         this.$store.dispatch("user/load");
         this.$router.push("home");

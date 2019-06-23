@@ -126,7 +126,13 @@ Parameters:
                                                     
   useDefault:
     Type: String
-          
+              
+  thirdPartyAuth:
+    Type: String
+            
+  hostedUI:
+    Type: String
+        
 Conditions:
   ShouldNotCreateEnvResources: !Equals [ !Ref env, NONE ]
 

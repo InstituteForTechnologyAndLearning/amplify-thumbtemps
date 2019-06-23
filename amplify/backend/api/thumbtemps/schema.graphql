@@ -1,0 +1,113 @@
+# Available Operations: create, update, delete, read
+
+type Category
+	@model
+	@auth(
+		rules: [
+			{ allow: owner, operations: [create, update, delete] }
+			{ allow: groups, groups: "admin", operations: [create, update, delete] }
+		]
+	) {
+	id: ID!
+	thumbnails: [Thumbnail]! @connection(name: "ThumbnailCategory")
+	name: String!
+	owner: String
+}
+
+type Keywords
+	@model
+	@auth(
+		rules: [
+			{ allow: owner, operations: [create, update, delete] }
+			{ allow: groups, groups: "admin", operations: [create, update, delete] }
+			{ allow: groups, groups: "publisher", operations: [create] }
+		]
+	) {
+	id: ID!
+	thumbnails: Thumbnail @connection(name: "ThumbnailKeywords")
+	name: String!
+	owner: String
+}
+
+enum DownloadType {
+	PHOTOSHOP
+	PHOTOSHOP_WITH_IMAGES
+	GIMP
+	GIMP_WITH_IMAGES
+	ZIP
+}
+
+type Download
+	@model
+	@auth(
+		rules: [
+			{ allow: owner, operations: [create, update, delete] }
+			{ allow: groups, groups: "admin", operations: [create, update, delete] }
+			{ allow: groups, groups: "publisher", operations: [create] }
+		]
+	) {
+	id: ID!
+	thumbnail: Thumbnail @connection(name: "ThumbnailDownload")
+	source: String!
+	fileSize: Int!
+	downloadType: DownloadType!
+	owner: String
+}
+
+type Image
+	@model
+	@auth(
+		rules: [
+			{ allow: owner, operations: [create, update, delete] }
+			{ allow: groups, groups: "admin", operations: [create, update, delete] }
+			{ allow: groups, groups: "publisher", operations: [create] }
+		]
+	) {
+	id: ID!
+	thumbnail: Thumbnail @connection(name: "ThumbnailImages")
+	title: String!
+	publisher: String!
+	source: String!
+	order: Int!
+	owner: String
+}
+
+type Font
+	@model
+	@auth(
+		rules: [
+			{ allow: owner, operations: [create, update, delete] }
+			{ allow: groups, groups: "admin", operations: [create, update, delete] }
+			{ allow: groups, groups: "publisher", operations: [create] }
+		]
+	) {
+	id: ID!
+	thumbnails: Thumbnail @connection(name: "ThumbnailFonts")
+	name: String!
+	source: String!
+	owner: String
+}
+
+type Thumbnail
+	@model
+	@key(fields: ["slug", "releaseDate"])
+	@auth(
+		rules: [
+			{ allow: owner, operations: [create, update, delete] }
+			{ allow: groups, groups: "admin", operations: [create, update, delete] }
+			{ allow: groups, groups: "publisher", operations: [create] }
+		]
+	) {
+	id: ID!
+	title: String!
+	slug: String!
+	description: String!
+	releaseDate: Int!
+	download: Download! @connection(name: "ThumbnailDownload")
+	images: [Image]! @connection(name: "ThumbnailImages")
+	category: Category! @connection(name: "ThumbnailCategory")
+	keywords: [Keywords]! @connection(name: "ThumbnailKeywords")
+	fonts: [Font]! @connection(name: "ThumbnailFonts")
+	deletedAt: Int
+	owner: String
+}

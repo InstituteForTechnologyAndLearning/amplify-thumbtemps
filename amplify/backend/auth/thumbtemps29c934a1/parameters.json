@@ -1,6 +1,6 @@
 {
     "identityPoolName": "thumbtemps29c934a1_identitypool_29c934a1",
-    "allowUnauthenticatedIdentities": false,
+    "allowUnauthenticatedIdentities": true,
     "lambdaLogPolicy": "thumbt_29c934a1_lambda_log_policy",
     "openIdLambdaRoleName": "thumbt_29c934a1_openid_lambda_role",
     "openIdRolePolicy": "thumbt_29c934a1_openid_pass_role_policy",
@@ -64,5 +64,7 @@
             "Arn"
         ]
     },
-    "useDefault": "default"
+    "useDefault": "manual",
+    "thirdPartyAuth": false,
+    "hostedUI": false
 }

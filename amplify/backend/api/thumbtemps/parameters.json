@@ -1,0 +1,10 @@
+{
+    "AppSyncApiName": "thumbtemps",
+    "DynamoDBBillingMode": "PAY_PER_REQUEST",
+    "AuthCognitoUserPoolId": {
+        "Fn::GetAtt": [
+            "auththumbtemps29c934a1",
+            "Outputs.UserPoolId"
+        ]
+    }
+}
