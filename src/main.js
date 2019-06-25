@@ -11,6 +11,9 @@ import ZeitUI from '@zeit-ui/vue';
 import '@zeit-ui/vue/dist/zeit-ui.css';
 import './assets/styles/global.scss';
 
+// overwrite auth type to IAM
+awsconfig['aws_appsync_authenticationType'] = 'AWS_IAM';
+
 Amplify.configure(awsconfig);
 
 Vue.config.productionTip = false;
