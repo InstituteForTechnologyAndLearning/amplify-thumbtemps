@@ -44,6 +44,11 @@ const router = new Router({
       path: '/admin/thumbnails',
       name: 'adminThumbanils',
       component: () => import('./views/admin/Thumbnails.vue')
+    },
+    {
+      path: '/admin/categories',
+      name: 'adminCategories',
+      component: () => import('./views/admin/Categories.vue')
     }
   ]
 });
