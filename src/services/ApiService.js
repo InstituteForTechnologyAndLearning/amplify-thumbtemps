@@ -5,11 +5,13 @@ class ApiService {
     return await API.graphql(graphqlOperation(query));
   }
 
-  async find(query, uidObject) {
-    return await API.graphql(graphqlOperation(query, uidObject));
+  async find(query, uid) {
+    return await API.graphql(graphqlOperation(query, uid));
   }
 
-  async post() {}
+  async post(mutation, input) {
+    return await API.graphql(graphqlOperation(mutation, input));
+  }
 
   async put() {}
 

@@ -61,86 +61,52 @@ export const deleteCategory = `mutation DeleteCategory($input: DeleteCategoryInp
   }
 }
 `;
-export const createKeywords = `mutation CreateKeywords($input: CreateKeywordsInput!) {
-  createKeywords(input: $input) {
+export const createKeyword = `mutation CreateKeyword($input: CreateKeywordInput!) {
+  createKeyword(input: $input) {
     id
     thumbnails {
-      id
-      title
-      slug
-      description
-      releaseDate
-      download {
+      items {
         id
-        source
-        fileSize
-        downloadType
-        owner
       }
-      images {
-        nextToken
-      }
-      category {
-        id
-        name
-        owner
-      }
-      keywords {
-        nextToken
-      }
-      fonts {
-        nextToken
-      }
-      deletedAt
-      owner
+      nextToken
     }
     name
     owner
   }
 }
 `;
-export const updateKeywords = `mutation UpdateKeywords($input: UpdateKeywordsInput!) {
-  updateKeywords(input: $input) {
+export const updateKeyword = `mutation UpdateKeyword($input: UpdateKeywordInput!) {
+  updateKeyword(input: $input) {
     id
     thumbnails {
-      id
-      title
-      slug
-      description
-      releaseDate
-      download {
+      items {
         id
-        source
-        fileSize
-        downloadType
-        owner
       }
-      images {
-        nextToken
-      }
-      category {
-        id
-        name
-        owner
-      }
-      keywords {
-        nextToken
-      }
-      fonts {
-        nextToken
-      }
-      deletedAt
-      owner
+      nextToken
     }
     name
     owner
   }
 }
 `;
-export const deleteKeywords = `mutation DeleteKeywords($input: DeleteKeywordsInput!) {
-  deleteKeywords(input: $input) {
+export const deleteKeyword = `mutation DeleteKeyword($input: DeleteKeywordInput!) {
+  deleteKeyword(input: $input) {
     id
     thumbnails {
+      items {
+        id
+      }
+      nextToken
+    }
+    name
+    owner
+  }
+}
+`;
+export const createThumbnailKeyword = `mutation CreateThumbnailKeyword($input: CreateThumbnailKeywordInput!) {
+  createThumbnailKeyword(input: $input) {
+    id
+    thumbnail {
       id
       title
       slug
@@ -170,8 +136,102 @@ export const deleteKeywords = `mutation DeleteKeywords($input: DeleteKeywordsInp
       deletedAt
       owner
     }
-    name
-    owner
+    keyword {
+      id
+      thumbnails {
+        nextToken
+      }
+      name
+      owner
+    }
+  }
+}
+`;
+export const updateThumbnailKeyword = `mutation UpdateThumbnailKeyword($input: UpdateThumbnailKeywordInput!) {
+  updateThumbnailKeyword(input: $input) {
+    id
+    thumbnail {
+      id
+      title
+      slug
+      description
+      releaseDate
+      download {
+        id
+        source
+        fileSize
+        downloadType
+        owner
+      }
+      images {
+        nextToken
+      }
+      category {
+        id
+        name
+        owner
+      }
+      keywords {
+        nextToken
+      }
+      fonts {
+        nextToken
+      }
+      deletedAt
+      owner
+    }
+    keyword {
+      id
+      thumbnails {
+        nextToken
+      }
+      name
+      owner
+    }
+  }
+}
+`;
+export const deleteThumbnailKeyword = `mutation DeleteThumbnailKeyword($input: DeleteThumbnailKeywordInput!) {
+  deleteThumbnailKeyword(input: $input) {
+    id
+    thumbnail {
+      id
+      title
+      slug
+      description
+      releaseDate
+      download {
+        id
+        source
+        fileSize
+        downloadType
+        owner
+      }
+      images {
+        nextToken
+      }
+      category {
+        id
+        name
+        owner
+      }
+      keywords {
+        nextToken
+      }
+      fonts {
+        nextToken
+      }
+      deletedAt
+      owner
+    }
+    keyword {
+      id
+      thumbnails {
+        nextToken
+      }
+      name
+      owner
+    }
   }
 }
 `;
@@ -422,34 +482,10 @@ export const createFont = `mutation CreateFont($input: CreateFontInput!) {
   createFont(input: $input) {
     id
     thumbnails {
-      id
-      title
-      slug
-      description
-      releaseDate
-      download {
+      items {
         id
-        source
-        fileSize
-        downloadType
-        owner
       }
-      images {
-        nextToken
-      }
-      category {
-        id
-        name
-        owner
-      }
-      keywords {
-        nextToken
-      }
-      fonts {
-        nextToken
-      }
-      deletedAt
-      owner
+      nextToken
     }
     name
     source
@@ -461,34 +497,10 @@ export const updateFont = `mutation UpdateFont($input: UpdateFontInput!) {
   updateFont(input: $input) {
     id
     thumbnails {
-      id
-      title
-      slug
-      description
-      releaseDate
-      download {
+      items {
         id
-        source
-        fileSize
-        downloadType
-        owner
       }
-      images {
-        nextToken
-      }
-      category {
-        id
-        name
-        owner
-      }
-      keywords {
-        nextToken
-      }
-      fonts {
-        nextToken
-      }
-      deletedAt
-      owner
+      nextToken
     }
     name
     source
@@ -500,6 +512,21 @@ export const deleteFont = `mutation DeleteFont($input: DeleteFontInput!) {
   deleteFont(input: $input) {
     id
     thumbnails {
+      items {
+        id
+      }
+      nextToken
+    }
+    name
+    source
+    owner
+  }
+}
+`;
+export const createThumbnailFont = `mutation CreateThumbnailFont($input: CreateThumbnailFontInput!) {
+  createThumbnailFont(input: $input) {
+    id
+    thumbnail {
       id
       title
       slug
@@ -529,9 +556,105 @@ export const deleteFont = `mutation DeleteFont($input: DeleteFontInput!) {
       deletedAt
       owner
     }
-    name
-    source
-    owner
+    font {
+      id
+      thumbnails {
+        nextToken
+      }
+      name
+      source
+      owner
+    }
+  }
+}
+`;
+export const updateThumbnailFont = `mutation UpdateThumbnailFont($input: UpdateThumbnailFontInput!) {
+  updateThumbnailFont(input: $input) {
+    id
+    thumbnail {
+      id
+      title
+      slug
+      description
+      releaseDate
+      download {
+        id
+        source
+        fileSize
+        downloadType
+        owner
+      }
+      images {
+        nextToken
+      }
+      category {
+        id
+        name
+        owner
+      }
+      keywords {
+        nextToken
+      }
+      fonts {
+        nextToken
+      }
+      deletedAt
+      owner
+    }
+    font {
+      id
+      thumbnails {
+        nextToken
+      }
+      name
+      source
+      owner
+    }
+  }
+}
+`;
+export const deleteThumbnailFont = `mutation DeleteThumbnailFont($input: DeleteThumbnailFontInput!) {
+  deleteThumbnailFont(input: $input) {
+    id
+    thumbnail {
+      id
+      title
+      slug
+      description
+      releaseDate
+      download {
+        id
+        source
+        fileSize
+        downloadType
+        owner
+      }
+      images {
+        nextToken
+      }
+      category {
+        id
+        name
+        owner
+      }
+      keywords {
+        nextToken
+      }
+      fonts {
+        nextToken
+      }
+      deletedAt
+      owner
+    }
+    font {
+      id
+      thumbnails {
+        nextToken
+      }
+      name
+      source
+      owner
+    }
   }
 }
 `;
@@ -580,17 +703,12 @@ export const createThumbnail = `mutation CreateThumbnail($input: CreateThumbnail
     keywords {
       items {
         id
-        name
-        owner
       }
       nextToken
     }
     fonts {
       items {
         id
-        name
-        source
-        owner
       }
       nextToken
     }
@@ -644,17 +762,12 @@ export const updateThumbnail = `mutation UpdateThumbnail($input: UpdateThumbnail
     keywords {
       items {
         id
-        name
-        owner
       }
       nextToken
     }
     fonts {
       items {
         id
-        name
-        source
-        owner
       }
       nextToken
     }
@@ -708,17 +821,12 @@ export const deleteThumbnail = `mutation DeleteThumbnail($input: DeleteThumbnail
     keywords {
       items {
         id
-        name
-        owner
       }
       nextToken
     }
     fonts {
       items {
         id
-        name
-        source
-        owner
       }
       nextToken
     }

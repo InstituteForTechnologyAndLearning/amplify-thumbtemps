@@ -39,60 +39,30 @@ export const listCategorys = `query ListCategorys(
   }
 }
 `;
-export const getKeywords = `query GetKeywords($id: ID!) {
-  getKeywords(id: $id) {
+export const getKeyword = `query GetKeyword($id: ID!) {
+  getKeyword(id: $id) {
     id
     thumbnails {
-      id
-      title
-      slug
-      description
-      releaseDate
-      download {
+      items {
         id
-        source
-        fileSize
-        downloadType
-        owner
       }
-      images {
-        nextToken
-      }
-      category {
-        id
-        name
-        owner
-      }
-      keywords {
-        nextToken
-      }
-      fonts {
-        nextToken
-      }
-      deletedAt
-      owner
+      nextToken
     }
     name
     owner
   }
 }
 `;
-export const listKeywordss = `query ListKeywordss(
-  $filter: ModelKeywordsFilterInput
+export const listKeywords = `query ListKeywords(
+  $filter: ModelKeywordFilterInput
   $limit: Int
   $nextToken: String
 ) {
-  listKeywordss(filter: $filter, limit: $limit, nextToken: $nextToken) {
+  listKeywords(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
       thumbnails {
-        id
-        title
-        slug
-        description
-        releaseDate
-        deletedAt
-        owner
+        nextToken
       }
       name
       owner
@@ -239,34 +209,10 @@ export const getFont = `query GetFont($id: ID!) {
   getFont(id: $id) {
     id
     thumbnails {
-      id
-      title
-      slug
-      description
-      releaseDate
-      download {
+      items {
         id
-        source
-        fileSize
-        downloadType
-        owner
       }
-      images {
-        nextToken
-      }
-      category {
-        id
-        name
-        owner
-      }
-      keywords {
-        nextToken
-      }
-      fonts {
-        nextToken
-      }
-      deletedAt
-      owner
+      nextToken
     }
     name
     source
@@ -283,13 +229,7 @@ export const listFonts = `query ListFonts(
     items {
       id
       thumbnails {
-        id
-        title
-        slug
-        description
-        releaseDate
-        deletedAt
-        owner
+        nextToken
       }
       name
       source
@@ -299,8 +239,8 @@ export const listFonts = `query ListFonts(
   }
 }
 `;
-export const getThumbnail = `query GetThumbnail($slug: String!, $releaseDate: Int!) {
-  getThumbnail(slug: $slug, releaseDate: $releaseDate) {
+export const getThumbnail = `query GetThumbnail($id: ID!) {
+  getThumbnail(id: $id) {
     id
     title
     slug
@@ -344,17 +284,12 @@ export const getThumbnail = `query GetThumbnail($slug: String!, $releaseDate: In
     keywords {
       items {
         id
-        name
-        owner
       }
       nextToken
     }
     fonts {
       items {
         id
-        name
-        source
-        owner
       }
       nextToken
     }
@@ -364,13 +299,53 @@ export const getThumbnail = `query GetThumbnail($slug: String!, $releaseDate: In
 }
 `;
 export const listThumbnails = `query ListThumbnails(
+  $filter: ModelThumbnailFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listThumbnails(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      title
+      slug
+      description
+      releaseDate
+      download {
+        id
+        source
+        fileSize
+        downloadType
+        owner
+      }
+      images {
+        nextToken
+      }
+      category {
+        id
+        name
+        owner
+      }
+      keywords {
+        nextToken
+      }
+      fonts {
+        nextToken
+      }
+      deletedAt
+      owner
+    }
+    nextToken
+  }
+}
+`;
+export const thumbnailsBySlug = `query ThumbnailsBySlug(
   $slug: String
   $releaseDate: ModelIntKeyConditionInput
   $filter: ModelThumbnailFilterInput
   $limit: Int
   $nextToken: String
 ) {
-  listThumbnails(
+  thumbnailsBySlug(
     slug: $slug
     releaseDate: $releaseDate
     filter: $filter

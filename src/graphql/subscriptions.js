@@ -61,86 +61,52 @@ export const onDeleteCategory = `subscription OnDeleteCategory {
   }
 }
 `;
-export const onCreateKeywords = `subscription OnCreateKeywords {
-  onCreateKeywords {
+export const onCreateKeyword = `subscription OnCreateKeyword {
+  onCreateKeyword {
     id
     thumbnails {
-      id
-      title
-      slug
-      description
-      releaseDate
-      download {
+      items {
         id
-        source
-        fileSize
-        downloadType
-        owner
       }
-      images {
-        nextToken
-      }
-      category {
-        id
-        name
-        owner
-      }
-      keywords {
-        nextToken
-      }
-      fonts {
-        nextToken
-      }
-      deletedAt
-      owner
+      nextToken
     }
     name
     owner
   }
 }
 `;
-export const onUpdateKeywords = `subscription OnUpdateKeywords {
-  onUpdateKeywords {
+export const onUpdateKeyword = `subscription OnUpdateKeyword {
+  onUpdateKeyword {
     id
     thumbnails {
-      id
-      title
-      slug
-      description
-      releaseDate
-      download {
+      items {
         id
-        source
-        fileSize
-        downloadType
-        owner
       }
-      images {
-        nextToken
-      }
-      category {
-        id
-        name
-        owner
-      }
-      keywords {
-        nextToken
-      }
-      fonts {
-        nextToken
-      }
-      deletedAt
-      owner
+      nextToken
     }
     name
     owner
   }
 }
 `;
-export const onDeleteKeywords = `subscription OnDeleteKeywords {
-  onDeleteKeywords {
+export const onDeleteKeyword = `subscription OnDeleteKeyword {
+  onDeleteKeyword {
     id
     thumbnails {
+      items {
+        id
+      }
+      nextToken
+    }
+    name
+    owner
+  }
+}
+`;
+export const onCreateThumbnailKeyword = `subscription OnCreateThumbnailKeyword {
+  onCreateThumbnailKeyword {
+    id
+    thumbnail {
       id
       title
       slug
@@ -170,8 +136,102 @@ export const onDeleteKeywords = `subscription OnDeleteKeywords {
       deletedAt
       owner
     }
-    name
-    owner
+    keyword {
+      id
+      thumbnails {
+        nextToken
+      }
+      name
+      owner
+    }
+  }
+}
+`;
+export const onUpdateThumbnailKeyword = `subscription OnUpdateThumbnailKeyword {
+  onUpdateThumbnailKeyword {
+    id
+    thumbnail {
+      id
+      title
+      slug
+      description
+      releaseDate
+      download {
+        id
+        source
+        fileSize
+        downloadType
+        owner
+      }
+      images {
+        nextToken
+      }
+      category {
+        id
+        name
+        owner
+      }
+      keywords {
+        nextToken
+      }
+      fonts {
+        nextToken
+      }
+      deletedAt
+      owner
+    }
+    keyword {
+      id
+      thumbnails {
+        nextToken
+      }
+      name
+      owner
+    }
+  }
+}
+`;
+export const onDeleteThumbnailKeyword = `subscription OnDeleteThumbnailKeyword {
+  onDeleteThumbnailKeyword {
+    id
+    thumbnail {
+      id
+      title
+      slug
+      description
+      releaseDate
+      download {
+        id
+        source
+        fileSize
+        downloadType
+        owner
+      }
+      images {
+        nextToken
+      }
+      category {
+        id
+        name
+        owner
+      }
+      keywords {
+        nextToken
+      }
+      fonts {
+        nextToken
+      }
+      deletedAt
+      owner
+    }
+    keyword {
+      id
+      thumbnails {
+        nextToken
+      }
+      name
+      owner
+    }
   }
 }
 `;
@@ -422,34 +482,10 @@ export const onCreateFont = `subscription OnCreateFont {
   onCreateFont {
     id
     thumbnails {
-      id
-      title
-      slug
-      description
-      releaseDate
-      download {
+      items {
         id
-        source
-        fileSize
-        downloadType
-        owner
       }
-      images {
-        nextToken
-      }
-      category {
-        id
-        name
-        owner
-      }
-      keywords {
-        nextToken
-      }
-      fonts {
-        nextToken
-      }
-      deletedAt
-      owner
+      nextToken
     }
     name
     source
@@ -461,34 +497,10 @@ export const onUpdateFont = `subscription OnUpdateFont {
   onUpdateFont {
     id
     thumbnails {
-      id
-      title
-      slug
-      description
-      releaseDate
-      download {
+      items {
         id
-        source
-        fileSize
-        downloadType
-        owner
       }
-      images {
-        nextToken
-      }
-      category {
-        id
-        name
-        owner
-      }
-      keywords {
-        nextToken
-      }
-      fonts {
-        nextToken
-      }
-      deletedAt
-      owner
+      nextToken
     }
     name
     source
@@ -500,6 +512,21 @@ export const onDeleteFont = `subscription OnDeleteFont {
   onDeleteFont {
     id
     thumbnails {
+      items {
+        id
+      }
+      nextToken
+    }
+    name
+    source
+    owner
+  }
+}
+`;
+export const onCreateThumbnailFont = `subscription OnCreateThumbnailFont {
+  onCreateThumbnailFont {
+    id
+    thumbnail {
       id
       title
       slug
@@ -529,9 +556,105 @@ export const onDeleteFont = `subscription OnDeleteFont {
       deletedAt
       owner
     }
-    name
-    source
-    owner
+    font {
+      id
+      thumbnails {
+        nextToken
+      }
+      name
+      source
+      owner
+    }
+  }
+}
+`;
+export const onUpdateThumbnailFont = `subscription OnUpdateThumbnailFont {
+  onUpdateThumbnailFont {
+    id
+    thumbnail {
+      id
+      title
+      slug
+      description
+      releaseDate
+      download {
+        id
+        source
+        fileSize
+        downloadType
+        owner
+      }
+      images {
+        nextToken
+      }
+      category {
+        id
+        name
+        owner
+      }
+      keywords {
+        nextToken
+      }
+      fonts {
+        nextToken
+      }
+      deletedAt
+      owner
+    }
+    font {
+      id
+      thumbnails {
+        nextToken
+      }
+      name
+      source
+      owner
+    }
+  }
+}
+`;
+export const onDeleteThumbnailFont = `subscription OnDeleteThumbnailFont {
+  onDeleteThumbnailFont {
+    id
+    thumbnail {
+      id
+      title
+      slug
+      description
+      releaseDate
+      download {
+        id
+        source
+        fileSize
+        downloadType
+        owner
+      }
+      images {
+        nextToken
+      }
+      category {
+        id
+        name
+        owner
+      }
+      keywords {
+        nextToken
+      }
+      fonts {
+        nextToken
+      }
+      deletedAt
+      owner
+    }
+    font {
+      id
+      thumbnails {
+        nextToken
+      }
+      name
+      source
+      owner
+    }
   }
 }
 `;
@@ -580,17 +703,12 @@ export const onCreateThumbnail = `subscription OnCreateThumbnail {
     keywords {
       items {
         id
-        name
-        owner
       }
       nextToken
     }
     fonts {
       items {
         id
-        name
-        source
-        owner
       }
       nextToken
     }
@@ -644,17 +762,12 @@ export const onUpdateThumbnail = `subscription OnUpdateThumbnail {
     keywords {
       items {
         id
-        name
-        owner
       }
       nextToken
     }
     fonts {
       items {
         id
-        name
-        source
-        owner
       }
       nextToken
     }
@@ -708,17 +821,12 @@ export const onDeleteThumbnail = `subscription OnDeleteThumbnail {
     keywords {
       items {
         id
-        name
-        owner
       }
       nextToken
     }
     fonts {
       items {
         id
-        name
-        source
-        owner
       }
       nextToken
     }
