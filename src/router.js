@@ -48,6 +48,7 @@ const router = new Router({
     {
       path: '/admin/categories',
       name: 'adminCategories',
+      props: { routeProp: true },
       component: () => import('./views/admin/Categories.vue')
     }
   ]
@@ -89,14 +90,42 @@ async function beforeEach(to, from, next) {
   const middleware = getMiddleware(components);
 
   // Call each middleware.
-  callMiddleware(middleware, to, from, (...args) => {
+  callMiddleware(middleware, to, from, async (...args) => {
+    let comp = components[0].default ? components[0].default : components[0];
+
     // Set the application layout only if "next()" was called with no args.
     if (args.length === 0) {
-      let layout = components[0].layout ? components[0].layout : (components[0].default || {}).layout || '';
+      // set layout
+      let layout = comp.layout || '';
       router.app.setLayout(layout);
     }
 
-    next(...args);
+    function _next(data) {
+      let compData = {};
+
+      if (typeof data !== 'object' || Array.isArray(data)) {
+        data = { data };
+      }
+
+      if (typeof comp.data === 'function') {
+        compData = comp.data();
+      }
+
+      comp.data = () => ({
+        ...compData,
+        ...data
+      });
+
+      next(...args);
+    }
+
+    if (typeof comp.asyncData === 'function') {
+      const asyncData = await comp.asyncData({ ...to, from, store });
+      _next(asyncData);
+    }
+    else {
+      next(...args);
+    }
   });
 }
 

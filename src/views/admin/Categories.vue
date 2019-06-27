@@ -18,19 +18,25 @@ export default {
   layout: "admin",
   middleware: ["admin"],
 
-  data: () => ({
-    isLoading: false,
-    categories: [],
-    form: FormService.createForm(["name"])
-  }),
-
-  async mounted() {
+  async asyncData({ store }) {
     try {
-      this.categories = await this.listCategories();
+      return { categories: await store.dispatch("api/listCategories") };
     } catch (err) {
-      this.$Toast.danger(`Failed to load categories`);
+      store.dispatch("alert/add", {
+        type: "danger",
+        text: "Failed to load categories"
+      });
     }
   },
+
+  props: {
+    test: String
+  },
+
+  data: () => ({
+    isLoading: false,
+    form: FormService.createForm(["name"])
+  }),
 
   methods: {
     ...mapActions("api", ["listCategories", "getCategory", "createCategory"]),
