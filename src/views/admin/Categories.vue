@@ -22,10 +22,7 @@ export default {
     try {
       return { categories: await store.dispatch("api/listCategories") };
     } catch (err) {
-      store.dispatch("alert/add", {
-        type: "danger",
-        text: "Failed to load categories"
-      });
+      store.dispatch("alert/danger", 'Failed to load categories');
     }
   },
 
