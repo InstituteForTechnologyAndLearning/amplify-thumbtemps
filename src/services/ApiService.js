@@ -13,9 +13,13 @@ class ApiService {
     return await API.graphql(graphqlOperation(mutation, input));
   }
 
-  async put() {}
+  async put(mutation, input) {
+    return await API.graphql(graphqlOperation(mutation, input));
+  }
 
-  async delete() {}
+  async destroy(mutation, input) {
+    return await API.graphql(graphqlOperation(mutation, input));
+  }
 }
 
 export default new ApiService();
