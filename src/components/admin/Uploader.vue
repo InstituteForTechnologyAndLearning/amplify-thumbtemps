@@ -7,7 +7,7 @@
       type="file"
       ref="thumbnail"
       :value="value"
-      @change="addFile"
+      @change="handleAdd"
       multiple
     >
     <label
@@ -17,6 +17,12 @@
       @dragenter="fileIsHovered = true"
       @dragleave="fileIsHovered = false"
     >{{ placeholder }}</label>
+    <zi-note v-if="invalidFiles.length" type="error" class="mt-3">
+      <dl v-for="invalid in invalidFiles" :key="invalid.file.name" class="text-label">
+        <dt>{{ invalid.file.name }}</dt>
+        <dd v-for="error in invalid.errors" :key="error" class="pl-6 border-l">{{ error }}</dd>
+      </dl>
+    </zi-note>
   </div>
 </template>
 
@@ -27,24 +33,117 @@ export default {
       type: String,
       default: "Select or Drop File(s)"
     },
+    types: {
+      type: Array,
+      default: () => ["image/jpeg", "image/jpg", "image/png"]
+    },
+    maxSize: {
+      type: Number,
+      default: 60000
+    },
     value: String
   },
 
+  computed: {
+    isImageType() {
+      var imageValidations = this.types.filter(t => t.includes("image"));
+      return imageValidations.length === this.types.length;
+    }
+  },
+
   data: () => ({
-    fileIsHovered: false
+    fileIsHovered: false,
+    invalidFiles: []
   }),
 
   methods: {
-    addFile(event) {
-      const files = event.target.files;
+    async handleAdd(event) {
+      await this.addFiles(event.target.files);
+    },
+
+    async handleDrop(event) {
+      await this.addFiles(event.dataTransfer.files);
+    },
+
+    async addFiles(fileList) {
+      const filesArray = this.normalizeFiles(fileList);
+      const { valid, invalid } = this.validateFiles(filesArray);
+      const files = this.isImageType ? await this.buildFiles(valid) : valid;
+      console.log({ files });
+      if (invalid.length) {
+        this.$Toast.danger(
+          `${invalid.length} of ${filesArray.length} file(s) were invalid`
+        );
+      }
+
       this.$emit("add", files);
     },
 
-    handleDrop(event) {
-      const files = event.dataTransfer.files;
+    normalizeFiles(files) {
+      return Array.from(files);
+    },
 
-      this.$emit("add", files);
-      this.fileIsHovered = false;
+    validateFiles(files) {
+      let validFiles = [];
+      let invalidFiles = [];
+
+      files.forEach(file => {
+        let fileMb = this.getMegabytes(file);
+        let isValidType = this.types.includes(file.type);
+        let isValidSize = this.maxSize >= fileMb;
+
+        isValidType && isValidSize
+          ? validFiles.push(file)
+          : invalidFiles.push({
+              file,
+              errors: [
+                !isValidType
+                  ? `File type ${file.type} is not of type ${this.types.join(
+                      ", "
+                    )}`
+                  : null,
+                !isValidSize
+                  ? `File size ${fileMb}MB exceeds limit of ${this.maxSize}MB`
+                  : null
+              ].filter(Boolean)
+            });
+      });
+
+      this.invalidFiles = invalidFiles;
+
+      return {
+        valid: validFiles,
+        invalid: invalidFiles
+      };
+    },
+
+    async buildFiles(files) {
+      let built = [];
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const preview = await this.getFilePreview(file);
+        built.push({ file, preview });
+      }
+
+      return built;
+    },
+
+    getFilePreview(file) {
+      return new Promise(resolve => {
+        const reader = new FileReader();
+
+        reader.onload = event => {
+          const preview = event.target.result;
+          resolve(preview);
+        };
+
+        reader.readAsDataURL(file);
+      });
+    },
+
+    getMegabytes(file) {
+      return file.size / 1000000;
     }
   }
 };
