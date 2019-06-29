@@ -9,6 +9,7 @@
         <router-link to="/admin">Home</router-link>
         <router-link to="/admin/categories">Categories</router-link>
         <router-link to="/admin/downloads">Downloads</router-link>
+        <router-link to="/admin/images">Images</router-link>
         <router-link to="/admin/thumbnails">Thumbnails</router-link>
       </div>
       <div class="px-3 py-6 flex items-center justify-between uppercase">

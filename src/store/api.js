@@ -75,6 +75,26 @@ export default {
      *
      */
 
+    async listImages({ dispatch }) {
+      return dispatch('get', { key: 'images', query: 'listImages' });
+    },
+
+    async getImage({ dispatch }, id) {
+      return dispatch('find', { key: 'image', query: 'getImage', uid: { id } });
+    },
+
+    async createImage({ dispatch }, input) {
+      return dispatch('post', { key: 'image', mutation: 'createImage', input });
+    },
+
+    async updateImage({ dispatch }, input) {
+      return dispatch('put', { key: 'image', mutation: 'updateImage', input });
+    },
+
+    async deleteImage({ dispatch }, input) {
+      return dispatch('destroy', { key: 'image', mutation: 'deleteImage', input });
+    },
+
     /**
      *
      * Keyword Actions

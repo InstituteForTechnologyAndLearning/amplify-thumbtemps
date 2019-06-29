@@ -13,5 +13,11 @@
 				"securityType": "API_KEY"
 			}
 		}
+	},
+	"storage": {
+		"thumbtemps": {
+			"service": "S3",
+			"providerPlugin": "awscloudformation"
+		}
 	}
 }

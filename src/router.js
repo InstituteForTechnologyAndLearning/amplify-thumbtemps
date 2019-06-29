@@ -51,6 +51,11 @@ const router = new Router({
       path: '/admin/downloads',
       name: 'adminDownloads',
       component: () => import('./views/admin/Downloads.vue')
+    },
+    {
+      path: '/admin/images',
+      name: 'adminImages',
+      component: () => import('./views/admin/Images.vue')
     }
   ]
 });
