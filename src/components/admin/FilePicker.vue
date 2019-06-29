@@ -68,15 +68,17 @@ export default {
     async addFiles(fileList) {
       const filesArray = this.normalizeFiles(fileList);
       const { valid, invalid } = this.validateFiles(filesArray);
-      const files = this.isImageType ? await this.buildFiles(valid) : valid;
-      console.log({ files });
+      const previews = this.isImageType
+        ? await this.buildPreviews(valid)
+        : valid;
+
       if (invalid.length) {
         this.$Toast.danger(
           `${invalid.length} of ${filesArray.length} file(s) were invalid`
         );
       }
 
-      this.$emit("add", files);
+      this.$emit("add", valid, previews);
     },
 
     normalizeFiles(files) {
@@ -117,16 +119,16 @@ export default {
       };
     },
 
-    async buildFiles(files) {
-      let built = [];
+    async buildPreviews(files) {
+      let previews = [];
 
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
         const preview = await this.getFilePreview(file);
-        built.push({ file, preview });
+        previews.push(preview);
       }
 
-      return built;
+      return previews;
     },
 
     getFilePreview(file) {
