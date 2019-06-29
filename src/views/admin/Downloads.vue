@@ -1,8 +1,8 @@
 <template>
   <div class="px-12 pt-6 max-w-3xl mx-auto">
-    <h1 class="pb-3">Categories</h1>
+    <h1 class="pb-3">Downloads</h1>
 
-    <zi-table :data="$store.state.api.categories" empty-text="No categories :(">
+    <zi-table :data="$store.state.api.downloads" empty-text="No downloads :(">
       <zi-table-column label="Name">
         <template slot-scope="scope">
           <div v-if="editId !== scope.row.id">{{ scope.row.name }}</div>
@@ -53,7 +53,7 @@ export default {
 
   async asyncData({ store }) {
     try {
-      await store.cache.dispatch("api/listCategories");
+      await store.cache.dispatch("api/listDownloads");
     } catch (err) {
       store.dispatch("alert/danger", "Failed to load categories");
     }
@@ -67,51 +67,51 @@ export default {
 
   methods: {
     ...mapActions("api", [
-      "listCategories",
-      "getCategory",
-      "createCategory",
-      "updateCategory",
-      "deleteCategory"
+      "listDownloads",
+      "getDownload",
+      "createDownload",
+      "updateDownload",
+      "deleteDownload"
     ]),
 
     async create() {
       try {
-        const category = await this.createCategory(this.form.dispatch());
+        const download = await this.createDownload(this.form.dispatch());
         this.form.clear();
-        await this.listCategories();
+        await this.listDownloads();
       } catch (err) {
         this.$Toast.danger(err);
       }
     },
 
-    edit(category, index) {
-      this.editId = category.id;
+    edit(download, index) {
+      this.editId = download.id;
       this.form.clear();
-      this.form.name.value = category.name;
+      this.form.name.value = download.name;
     },
 
     async update() {
       try {
         const data = { id: this.editId, ...this.form.dispatch() };
-        const category = await this.updateCategory(data);
+        const download = await this.updateDownload(data);
         this.cancel();
-        await this.listCategories();
+        await this.listDownloads();
       } catch (err) {
         this.$Toast.danger(err);
       }
     },
 
-    remove(category, index) {
-      this.pendingDeletion = category;
+    remove(download, index) {
+      this.pendingDeletion = download;
     },
 
     async destroy() {
       try {
         const id = this.pendingDeletion.id;
-        const category = await this.deleteCategory({ id });
+        const download = await this.deleteDownload({ id });
         this.pendingDeletion = null;
         if (this.editId === id) this.cancel();
-        await this.listCategories();
+        await this.listDownloads();
       } catch (err) {
         this.$Toast.danger(err);
       }

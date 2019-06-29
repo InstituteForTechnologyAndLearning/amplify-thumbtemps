@@ -7,14 +7,22 @@ export default {
   state: {
     categories: [],
     category: null,
+    downloads: [],
+    download: null
   },
   getters: {},
   mutations: {
     set(state, { key, value }) {
       state[key] = value;
-    },
+    }
   },
   actions: {
+    /**
+     *
+     * Category Actions
+     *
+     */
+
     async listCategories({ dispatch }) {
       return dispatch('get', { key: 'categories', query: 'listCategorys' });
     },
@@ -34,6 +42,56 @@ export default {
     async deleteCategory({ dispatch }, input) {
       return dispatch('destroy', { key: 'category', mutation: 'deleteCategory', input });
     },
+
+    /**
+     *
+     * Download Actions
+     *
+     */
+
+    async listDownloads({ dispatch }) {
+      return dispatch('get', { key: 'downloads', query: 'listDownloads' });
+    },
+
+    async getDownload({ dispatch }, id) {
+      return dispatch('find', { key: 'download', query: 'getDownload', uid: { id } });
+    },
+
+    async createDownload({ dispatch }, input) {
+      return dispatch('post', { key: 'download', mutation: 'createDownload', input });
+    },
+
+    async updateDownload({ dispatch }, input) {
+      return dispatch('put', { key: 'download', mutation: 'updateDownload', input });
+    },
+
+    async deleteDownload({ dispatch }, input) {
+      return dispatch('destroy', { key: 'download', mutation: 'deleteDownload', input });
+    },
+
+    /**
+     *
+     * Image Actions
+     *
+     */
+
+    /**
+     *
+     * Keyword Actions
+     *
+     */
+
+    /**
+     *
+     * Font Actions
+     *
+     */
+
+    /**
+     *
+     * Thumbnail Actions
+     *
+     */
 
     /**
      *
@@ -76,6 +134,6 @@ export default {
       const value = data[mutation];
       commit('set', { key, value });
       return value;
-    },
-  },
+    }
+  }
 };
