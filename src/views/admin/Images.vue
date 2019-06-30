@@ -56,10 +56,18 @@
 </template>
 
 <script>
+import { Storage } from "aws-amplify";
 import FilePicker from "@/components/admin/FilePicker";
 import FilePreviewer from "@/components/admin/FilePreviewer";
 import FormService from "@/services/FormService";
+import UtilityService from "@/services/UtilityService";
 import { mapActions } from "vuex";
+import config from "./aws-exports";
+
+const {
+  aws_user_files_s3_bucket_region: region,
+  aws_user_files_s3_bucket: bucket
+} = config;
 
 export default {
   layout: "admin",
@@ -100,6 +108,25 @@ export default {
 
     setImages(files) {
       this.pending = files;
+    },
+
+    // TODO: createImage imgData fields are wrong/missing
+    async saveImages() {
+      for (let i = 0; i < this.pending.length; i++) {
+        if (!this.pending[i]) continue;
+        const uuid = UtilityService.getUUID();
+        const filename = UtilityService.slugify(this.form.name.value);
+        const file = this.pending[i].file;
+        const extension = [...file.name.split(".")].pop();
+        const { type: mimeType } = file;
+        const key = `images/${filename}_${uuid}.${extension}`;
+        const url = `https://${bucket}.s3.${region}.amazonaws.com/public/${key}`;
+        const imgData = this.form.dispatch();
+        imgData.source = url;
+
+        await Storage.put(key, file, { contentType: mimeType });
+        await this.createImage(imgData);
+      }
     },
 
     async create() {
