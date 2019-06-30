@@ -31,7 +31,7 @@
       <h2>Add New</h2>
       <form v-if="!editId" @submit.prevent="create" class="mt-3">
         <FilePicker class="mb-3" @add="addImages" placeholder="Select or Drop Image(s)"/>
-        <FilePreviewer class="mb-3" :previews="pending.previews"/>
+        <FilePreviewer class="mb-3" :files="pending" @change="setImages"/>
         <zi-input class="w-full mb-3" v-model="form.name.value" placeholder="Name..."/>
         <zi-input class="w-full mb-3" v-model="form.name.value" placeholder="Owner..."/>
         <zi-input class="w-full mb-3" v-model="form.name.value" placeholder="Source..." disabled/>
@@ -81,10 +81,7 @@ export default {
   data: () => ({
     editId: null,
     pendingDeletion: null,
-    pending: {
-      files: [],
-      previews: []
-    },
+    pending: [],
     form: FormService.createForm(["name"])
   }),
 
@@ -97,9 +94,12 @@ export default {
       "deleteImage"
     ]),
 
-    addImages(files, previews) {
-      this.pending.files = [...this.pending.files, files];
-      this.pending.previews = [...this.pending.previews, previews];
+    addImages(files) {
+      this.pending = [...this.pending, ...files];
+    },
+
+    setImages(files) {
+      this.pending = files;
     },
 
     async create() {

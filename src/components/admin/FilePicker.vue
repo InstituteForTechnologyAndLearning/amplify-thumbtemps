@@ -78,7 +78,7 @@ export default {
         );
       }
 
-      this.$emit("add", valid, previews);
+      this.$emit("add", previews);
     },
 
     normalizeFiles(files) {
@@ -125,7 +125,10 @@ export default {
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
         const preview = await this.getFilePreview(file);
-        previews.push(preview);
+        previews.push({
+          file: files[i],
+          preview: preview
+        });
       }
 
       return previews;
