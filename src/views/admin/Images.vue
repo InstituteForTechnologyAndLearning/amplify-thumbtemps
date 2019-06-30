@@ -32,9 +32,9 @@
       <form v-if="!editId" @submit.prevent="create" class="mt-3">
         <FilePicker class="mb-3" @add="addImages" placeholder="Select or Drop Image(s)"/>
         <FilePreviewer class="mb-3" :files="pending" @change="setImages"/>
-        <zi-input class="w-full mb-3" v-model="form.name.value" placeholder="Name..."/>
-        <zi-input class="w-full mb-3" v-model="form.name.value" placeholder="Owner..."/>
-        <zi-input class="w-full mb-3" v-model="form.name.value" placeholder="Source..." disabled/>
+        <zi-input class="w-full mb-3" v-model="form.title.value" placeholder="Title..."/>
+        <zi-input class="w-full mb-3" v-model="form.publisher.value" placeholder="Publisher..."/>
+        <!-- <zi-input class="w-full mb-3" v-model="form.source.value" placeholder="Source..." disabled/> -->
         <div class="flex justify-end">
           <zi-button type="primary" class="mr-3">Save Images</zi-button>
           <zi-button type="danger" ghost auto>Delete</zi-button>
@@ -62,7 +62,7 @@ import FilePreviewer from "@/components/admin/FilePreviewer";
 import FormService from "@/services/FormService";
 import UtilityService from "@/services/UtilityService";
 import { mapActions } from "vuex";
-import config from "./aws-exports";
+import config from "@/aws-exports";
 
 const {
   aws_user_files_s3_bucket_region: region,
@@ -90,7 +90,7 @@ export default {
     editId: null,
     pendingDeletion: null,
     pending: [],
-    form: FormService.createForm(["name"])
+    form: FormService.createForm(["title", "publisher", "owner"])
   }),
 
   methods: {
@@ -110,12 +110,13 @@ export default {
       this.pending = files;
     },
 
-    // TODO: createImage imgData fields are wrong/missing
     async saveImages() {
+      const images = [];
+
       for (let i = 0; i < this.pending.length; i++) {
         if (!this.pending[i]) continue;
         const uuid = UtilityService.getUUID();
-        const filename = UtilityService.slugify(this.form.name.value);
+        const filename = UtilityService.slugify(this.form.title.value);
         const file = this.pending[i].file;
         const extension = [...file.name.split(".")].pop();
         const { type: mimeType } = file;
@@ -125,13 +126,15 @@ export default {
         imgData.source = url;
 
         await Storage.put(key, file, { contentType: mimeType });
-        await this.createImage(imgData);
+        images.push(await this.createImage(imgData));
       }
+
+      return images;
     },
 
     async create() {
       try {
-        const image = await this.createImage(this.form.dispatch());
+        const images = await this.saveImages();
         this.form.clear();
         await this.listImages();
       } catch (err) {
