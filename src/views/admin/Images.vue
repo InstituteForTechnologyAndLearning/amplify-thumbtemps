@@ -8,7 +8,7 @@
           <template slot-scope="scope">
             <div v-if="editId !== scope.row.id">{{ scope.row.name }}</div>
             <div v-else>
-              <zi-input class="w-full" v-model="form.name.value"/>
+              <zi-input class="w-full" v-model="form.name.value" />
             </div>
           </template>
         </zi-table-column>
@@ -30,13 +30,13 @@
     <div class="px-12 max-w-2xl pt-6 bg-gray min-h-screen">
       <h2>Add New</h2>
       <form v-if="!editId" @submit.prevent="create" class="mt-3">
-        <FilePicker class="mb-3" @add="addImages" placeholder="Select or Drop Image(s)"/>
-        <FilePreviewer class="mb-3" :files="pending" @change="setImages"/>
-        <zi-input class="w-full mb-3" v-model="form.title.value" placeholder="Title..."/>
-        <zi-input class="w-full mb-3" v-model="form.publisher.value" placeholder="Publisher..."/>
+        <FilePicker class="mb-3" @add="addImages" placeholder="Select or Drop Image(s)" />
+        <FilePreviewer class="mb-3" :files="pending" @change="setImages" />
+        <zi-input class="w-full mb-3" v-model="form.title.value" placeholder="Title..." />
+        <zi-input class="w-full mb-3" v-model="form.publisher.value" placeholder="Publisher..." />
         <!-- <zi-input class="w-full mb-3" v-model="form.source.value" placeholder="Source..." disabled/> -->
         <div class="flex justify-end">
-          <zi-button type="primary" class="mr-3">Save Images</zi-button>
+          <zi-button type="primary" class="mr-3" :loading="isSending">Save Images</zi-button>
           <zi-button type="danger" ghost auto>Delete</zi-button>
         </div>
       </form>
@@ -90,7 +90,8 @@ export default {
     editId: null,
     pendingDeletion: null,
     pending: [],
-    form: FormService.createForm(["title", "publisher", "owner"])
+    form: FormService.createForm(["title", "publisher"]),
+    isSending: false
   }),
 
   methods: {
@@ -124,6 +125,7 @@ export default {
         const url = `https://${bucket}.s3.${region}.amazonaws.com/public/${key}`;
         const imgData = this.form.dispatch();
         imgData.source = url;
+        imgData.order = i;
 
         await Storage.put(key, file, { contentType: mimeType });
         images.push(await this.createImage(imgData));
@@ -134,8 +136,10 @@ export default {
 
     async create() {
       try {
+        this.isSending = true;
         const images = await this.saveImages();
         this.form.clear();
+        this.isSending = false;
         await this.listImages();
       } catch (err) {
         this.$Toast.danger(err);
