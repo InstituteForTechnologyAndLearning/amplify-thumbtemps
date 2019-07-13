@@ -30,7 +30,7 @@
 
     <div class="px-12 pt-6 bg-gray min-h-screen" style="width: 420px;">
       <h2 class="truncate">{{ !editId ? 'Add New' : `Edit ${form.title.value}` }}</h2>
-      <form @submit.prevent="create" class="mt-3">
+      <form @submit.prevent="createOrUpdate" class="mt-3">
         <FilePicker
           v-if="!editId"
           class="mb-3"
@@ -48,7 +48,11 @@
           disabled
         />
         <div class="flex justify-end">
-          <zi-button type="primary" class="w-full mr-3" :loading="isSending">Save Images</zi-button>
+          <zi-button
+            type="primary"
+            class="w-full mr-3"
+            :loading="isSending"
+          >{{ !editId ? 'Save' : 'Update' }} Image(s)</zi-button>
           <zi-button v-if="!editId" type="danger" @click.prevent="cancel" ghost auto>Delete</zi-button>
           <zi-button v-else type="primary" @click.prevent="cancel" ghost auto>Cancel</zi-button>
         </div>
@@ -176,6 +180,10 @@ export default {
       } catch (err) {
         this.$Toast.danger(err);
       }
+    },
+
+    async createOrUpdate() {
+      this.editId ? this.update() : this.create();
     },
 
     remove(image, index) {
