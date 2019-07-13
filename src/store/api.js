@@ -8,13 +8,15 @@ export default {
     categories: [],
     category: null,
     downloads: [],
-    download: null
+    download: null,
+    images: [],
+    image: null,
   },
   getters: {},
   mutations: {
     set(state, { key, value }) {
       state[key] = value;
-    }
+    },
   },
   actions: {
     /**
@@ -154,6 +156,6 @@ export default {
       const value = data[mutation];
       commit('set', { key, value });
       return value;
-    }
-  }
+    },
+  },
 };

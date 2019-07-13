@@ -3,41 +3,54 @@
     <div class="flex-grow px-12 pt-6">
       <h1 class="pb-3">Images</h1>
 
-      <zi-table width="100%" :data="$store.state.api.images" empty-text="No images :(">
-        <zi-table-column label="Name">
+      <zi-table :data="$store.state.api.images" empty-text="No images :(">
+        <zi-table-column label="Title">
           <template slot-scope="scope">
-            <div v-if="editId !== scope.row.id">{{ scope.row.name }}</div>
-            <div v-else>
-              <zi-input class="w-full" v-model="form.name.value" />
+            <div class="flex items-center py-3">
+              <img class="w-24 mr-6" :src="scope.row.source" />
+              <div class="truncate">{{ scope.row.title }}</div>
             </div>
+          </template>
+        </zi-table-column>
+        <zi-table-column label="Publisher" width="100">
+          <template slot-scope="scope">
+            <div class="truncate">{{ scope.row.publisher }}</div>
           </template>
         </zi-table-column>
         <zi-table-column label=" " width="125">
           <template slot-scope="scope">
-            <div v-if="editId !== scope.row.id" class="flex justify-end">
+            <div class="flex justify-end">
               <a @click="edit(scope.row, scope.$index)" class="inline-block mr-3">Edit</a>
               <a @click="remove(scope.row, scope.$index)" class="text-magenta inline-block">Delete</a>
-            </div>
-            <div v-else class="flex justify-end">
-              <a @click="update" class="inline-block mr-3">Update</a>
-              <a @click="cancel" class="text-label inline-block">Cancel</a>
             </div>
           </template>
         </zi-table-column>
       </zi-table>
     </div>
 
-    <div class="px-12 max-w-2xl pt-6 bg-gray min-h-screen">
-      <h2>Add New</h2>
-      <form v-if="!editId" @submit.prevent="create" class="mt-3">
-        <FilePicker class="mb-3" @add="addImages" placeholder="Select or Drop Image(s)" />
-        <FilePreviewer class="mb-3" :files="pending" @change="setImages" />
+    <div class="px-12 pt-6 bg-gray min-h-screen" style="width: 420px;">
+      <h2 class="truncate">{{ !editId ? 'Add New' : `Edit ${form.title.value}` }}</h2>
+      <form @submit.prevent="create" class="mt-3">
+        <FilePicker
+          v-if="!editId"
+          class="mb-3"
+          @add="addImages"
+          placeholder="Select or Drop Image(s)"
+        />
+        <FilePreviewer v-if="!editId" class="mb-3" :files="pending" @change="setImages" />
         <zi-input class="w-full mb-3" v-model="form.title.value" placeholder="Title..." />
         <zi-input class="w-full mb-3" v-model="form.publisher.value" placeholder="Publisher..." />
-        <!-- <zi-input class="w-full mb-3" v-model="form.source.value" placeholder="Source..." disabled/> -->
+        <zi-input
+          v-if="editId"
+          class="w-full mb-3"
+          v-model="form.source.value"
+          placeholder="Source..."
+          disabled
+        />
         <div class="flex justify-end">
-          <zi-button type="primary" class="mr-3" :loading="isSending">Save Images</zi-button>
-          <zi-button type="danger" ghost auto>Delete</zi-button>
+          <zi-button type="primary" class="w-full mr-3" :loading="isSending">Save Images</zi-button>
+          <zi-button v-if="!editId" type="danger" @click.prevent="cancel" ghost auto>Delete</zi-button>
+          <zi-button v-else type="primary" @click.prevent="cancel" ghost auto>Cancel</zi-button>
         </div>
       </form>
     </div>
@@ -57,6 +70,7 @@
 
 <script>
 import { Storage } from "aws-amplify";
+import NewIcon from "@zeit-ui/vue-icons/packages/new";
 import FilePicker from "@/components/admin/FilePicker";
 import FilePreviewer from "@/components/admin/FilePreviewer";
 import FormService from "@/services/FormService";
@@ -73,15 +87,16 @@ export default {
   layout: "admin",
   middleware: ["admin"],
 
-  // async asyncData({ store }) {
-  //   try {
-  //     await store.cache.dispatch("api/listImages");
-  //   } catch (err) {
-  //     store.dispatch("alert/danger", "Failed to load categories");
-  //   }
-  // },
+  async asyncData({ store }) {
+    try {
+      await store.cache.dispatch("api/listImages");
+    } catch (err) {
+      store.dispatch("alert/danger", "Failed to load categories");
+    }
+  },
 
   components: {
+    NewIcon,
     FilePicker,
     FilePreviewer
   },
@@ -90,8 +105,8 @@ export default {
     editId: null,
     pendingDeletion: null,
     pending: [],
-    form: FormService.createForm(["title", "publisher"]),
-    isSending: false
+    isSending: false,
+    form: FormService.createForm(["title", "publisher", "source"])
   }),
 
   methods: {
@@ -149,7 +164,7 @@ export default {
     edit(image, index) {
       this.editId = image.id;
       this.form.clear();
-      this.form.name.value = image.name;
+      this.form.setValues(image);
     },
 
     async update() {
@@ -182,6 +197,9 @@ export default {
     cancel() {
       this.form.clear();
       this.editId = null;
+      this.pendingDeletion = null;
+      this.pending = [];
+      this.isSending = false;
     }
   }
 };

@@ -3,13 +3,13 @@ export const controlStates = {
   dirty: 'DIRTY',
   error: 'ERROR',
   warn: 'WARN',
-  valid: 'VALID'
+  valid: 'VALID',
 };
 
 export const formStates = {
   ...controlStates,
   success: 'SUCCESS',
-  sending: 'SENDING'
+  sending: 'SENDING',
 };
 
 class FormService {
@@ -19,7 +19,7 @@ class FormService {
       dirty: 'DIRTY',
       error: 'ERROR',
       warn: 'WARN',
-      valid: 'VALID'
+      valid: 'VALID',
     };
   }
 
@@ -27,19 +27,18 @@ class FormService {
     return {
       ...controlStates,
       success: 'SUCCESS',
-      sending: 'SENDING'
+      sending: 'SENDING',
     };
   }
 
   get safeUpdateFormStates() {
-    return [ this.controlStates.pristine, this.controlStates.dirty ];
+    return [this.controlStates.pristine, this.controlStates.dirty];
   }
 
   _getControlInstance(key, defaultValues) {
     if (defaultValues[key] && !defaultValues[key].value) {
       return { value: defaultValues[key] };
-    }
-    else if (defaultValues[key]) {
+    } else if (defaultValues[key]) {
       return defaultValues[key];
     }
     return undefined;
@@ -52,17 +51,17 @@ class FormService {
       placeholder: '',
       state: this.controlStates.pristine,
       error: null,
-      errorCount: 0
-    }
+      errorCount: 0,
+    },
   ) {
     let controlObject = { ...controlInstance };
-    controlObject.updateState = (state) => {
+    controlObject.updateState = state => {
       controlObject.state = state;
       if (this.safeUpdateFormStates.indexOf(state) > -1) {
         form.updateState(state);
       }
     };
-    controlObject.setError = (error) => {
+    controlObject.setError = error => {
       if (controlObject.error === error) controlObject.errorCount++;
       controlObject.error = error;
     };
@@ -72,12 +71,12 @@ class FormService {
   createForm(formInstance, defaultValues = {}) {
     let form = {};
     form.formState = controlStates.pristine;
-    form.updateState = (state) => {
+    form.updateState = state => {
       form.formState = state;
     };
     form.dispatch = (fields = formInstance) => {
       let copy = {};
-      fields.map((key) => {
+      fields.map(key => {
         if ((form[key].state = this.controlStates.pristine)) {
           form[key].state = this.controlStates.dirty;
         }
@@ -87,7 +86,7 @@ class FormService {
     };
     form.getIncomplete = (fields = formInstance) => {
       let incomplete = [];
-      fields.map((key) => {
+      fields.map(key => {
         if (form[key].state === this.controlStates.pristine || !form[key].value) {
           incomplete.push(key);
         }
@@ -95,27 +94,31 @@ class FormService {
       return incomplete;
     };
     form.clear = (fields = formInstance) => {
-      fields.map((key) => (form[key] = this._getControlObject(form)));
+      fields.map(key => (form[key] = this._getControlObject(form)));
     };
     form.clearErrors = (fields = formInstance) => {
-      fields.map((key) => (form[key].error = null));
+      fields.map(key => (form[key].error = null));
     };
 
-    if (Array.isArray(formInstance)) {
-      formInstance.forEach((key) => {
-        const controlInstance = this._getControlInstance(key, defaultValues);
-        form[key] = this._getControlObject(form, controlInstance);
-      });
-    }
-    else if (typeof formInstance === 'object') {
-      Object.keys(formInstance).forEach((key) => {
-        const controlInstance = this._getControlInstance(key, defaultValues);
-        form[key] = this._getControlObject(formInstance[key], controlInstance);
-      });
-    }
-    else {
-      console.warn('[createForm] formInstance must be array or object'), typeof formInstance;
-    }
+    form.setValues = (defaultValues = {}) => {
+      if (Array.isArray(formInstance)) {
+        formInstance.forEach(key => {
+          const controlInstance = this._getControlInstance(key, defaultValues);
+          form[key] = this._getControlObject(form, controlInstance);
+        });
+      } else if (typeof formInstance === 'object') {
+        Object.keys(formInstance).forEach(key => {
+          const controlInstance = this._getControlInstance(key, defaultValues);
+          form[key] = this._getControlObject(formInstance[key], controlInstance);
+        });
+      } else {
+        console.warn('[createForm] formInstance must be array or object'),
+          typeof formInstance;
+      }
+    };
+
+    form.setValues(defaultValues);
+
     return form;
   }
 }
