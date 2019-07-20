@@ -1,7 +1,10 @@
 <template>
   <div class="lg:flex">
     <div class="flex-grow px-12 pt-6">
-      <h1 class="pb-3">Images</h1>
+      <div class="flex justify-between items-center">
+        <h1 class="pb-3">Images</h1>
+        <zi-button type="primary" @click="isAdding = true">Create New</zi-button>
+      </div>
 
       <zi-table :data="$store.state.api.images" empty-text="No images :(">
         <zi-table-column label="Title">
@@ -28,36 +31,13 @@
       </zi-table>
     </div>
 
-    <div class="px-12 pt-6 bg-gray min-h-screen" style="width: 420px;">
-      <h2 class="truncate">{{ !editId ? 'Add New' : `Edit ${form.title.value}` }}</h2>
-      <form @submit.prevent="createOrUpdate" class="mt-3">
-        <FilePicker
-          v-if="!editId"
-          class="mb-3"
-          @add="addImages"
-          placeholder="Select or Drop Image(s)"
-        />
-        <FilePreviewer v-if="!editId" class="mb-3" :files="pending" @change="setImages" />
-        <zi-input class="w-full mb-3" v-model="form.title.value" placeholder="Title..." />
-        <zi-input class="w-full mb-3" v-model="form.publisher.value" placeholder="Publisher..." />
-        <zi-input
-          v-if="editId"
-          class="w-full mb-3"
-          v-model="form.source.value"
-          placeholder="Source..."
-          disabled
-        />
-        <div class="flex justify-end">
-          <zi-button
-            type="primary"
-            class="w-full mr-3"
-            :loading="isSending"
-          >{{ !editId ? 'Save' : 'Update' }} Image(s)</zi-button>
-          <zi-button v-if="!editId" type="danger" @click.prevent="cancel" ghost auto>Delete</zi-button>
-          <zi-button v-else type="primary" @click.prevent="cancel" ghost auto>Cancel</zi-button>
-        </div>
-      </form>
-    </div>
+    <ImageManager
+      v-show="editId || isAdding"
+      ref="imageManager"
+      :edit-id="editId"
+      @update="onUpdate"
+      @cancel="cancel"
+    />
 
     <zi-dialog
       v-model="pendingDeletion"
@@ -73,19 +53,8 @@
 </template>
 
 <script>
-import { Storage } from "aws-amplify";
-import NewIcon from "@zeit-ui/vue-icons/packages/new";
-import FilePicker from "@/components/admin/FilePicker";
-import FilePreviewer from "@/components/admin/FilePreviewer";
-import FormService from "@/services/FormService";
-import UtilityService from "@/services/UtilityService";
+import ImageManager from "@/components/admin/ImageManager";
 import { mapActions } from "vuex";
-import config from "@/aws-exports";
-
-const {
-  aws_user_files_s3_bucket_region: region,
-  aws_user_files_s3_bucket: bucket
-} = config;
 
 export default {
   layout: "admin",
@@ -100,66 +69,22 @@ export default {
   },
 
   components: {
-    NewIcon,
-    FilePicker,
-    FilePreviewer
+    ImageManager
   },
 
   data: () => ({
+    isAdding: false,
     editId: null,
-    pendingDeletion: null,
-    pending: [],
-    isSending: false,
-    form: FormService.createForm(["title", "publisher", "source"])
+    pendingDeletion: null
   }),
 
   methods: {
-    ...mapActions("api", [
-      "listImages",
-      "getImage",
-      "createImage",
-      "updateImage",
-      "deleteImage"
-    ]),
+    ...mapActions("api", ["listImages", "getImage", "deleteImage"]),
 
-    addImages(files) {
-      this.pending = [...this.pending, ...files];
-    },
-
-    setImages(files) {
-      this.pending = files;
-    },
-
-    async saveImages() {
-      const images = [];
-
-      for (let i = 0; i < this.pending.length; i++) {
-        if (!this.pending[i]) continue;
-        const uuid = UtilityService.getUUID();
-        const filename = UtilityService.slugify(this.form.title.value);
-        const file = this.pending[i].file;
-        const extension = [...file.name.split(".")].pop();
-        const { type: mimeType } = file;
-        const key = `images/${filename}_${uuid}.${extension}`;
-        const url = `https://${bucket}.s3.${region}.amazonaws.com/public/${key}`;
-        const imgData = this.form.dispatch();
-        imgData.source = url;
-        imgData.order = i;
-
-        await Storage.put(key, file, { contentType: mimeType });
-        images.push(await this.createImage(imgData));
-      }
-
-      return images;
-    },
-
-    async create() {
+    onUpdate() {
       try {
-        this.isSending = true;
-        const images = await this.saveImages();
-        this.form.clear();
-        this.isSending = false;
-        await this.listImages();
+        this.listImages();
+        this.cancel();
       } catch (err) {
         this.$Toast.danger(err);
       }
@@ -167,23 +92,7 @@ export default {
 
     edit(image, index) {
       this.editId = image.id;
-      this.form.clear();
-      this.form.setValues(image);
-    },
-
-    async update() {
-      try {
-        const data = { id: this.editId, ...this.form.dispatch() };
-        const image = await this.updateImage(data);
-        this.cancel();
-        await this.listImages();
-      } catch (err) {
-        this.$Toast.danger(err);
-      }
-    },
-
-    async createOrUpdate() {
-      this.editId ? this.update() : this.create();
+      this.$refs.imageManager.editImage(image);
     },
 
     remove(image, index) {
@@ -203,11 +112,9 @@ export default {
     },
 
     cancel() {
-      this.form.clear();
+      this.isAdding = false;
       this.editId = null;
       this.pendingDeletion = null;
-      this.pending = [];
-      this.isSending = false;
     }
   }
 };

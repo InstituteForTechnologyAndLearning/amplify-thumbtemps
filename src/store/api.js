@@ -1,6 +1,14 @@
 import ApiService from '@/services/ApiService';
+import UtilityService from '@/services/UtilityService';
+import { Storage } from 'aws-amplify';
+import config from '@/aws-exports';
 import * as queries from '@/graphql/queries';
 import * as mutations from '@/graphql/mutations';
+
+const {
+  aws_user_files_s3_bucket_region: region,
+  aws_user_files_s3_bucket: bucket,
+} = config;
 
 export default {
   namespaced: true,
@@ -11,6 +19,8 @@ export default {
     download: null,
     images: [],
     image: null,
+    thumbnails: [],
+    thumbnail: null,
   },
   getters: {},
   mutations: {
@@ -76,6 +86,29 @@ export default {
      * Image Actions
      *
      */
+
+    async storeAndCreateImages({ dispatch }, { imageSources, imageData }) {
+      const images = [];
+
+      for (let i = 0; i < imageSources.length; i++) {
+        if (!imageSources[i]) continue;
+        const uuid = UtilityService.getUUID();
+        const filename = UtilityService.slugify(imageData.title);
+        const file = imageSources[i].file;
+        const extension = [...file.name.split('.')].pop();
+        const { type: mimeType } = file;
+        const key = `images/${filename}_${uuid}.${extension}`;
+        const url = `https://${bucket}.s3.${region}.amazonaws.com/public/${key}`;
+
+        imageData.source = url;
+        imageData.order = i;
+
+        await Storage.put(key, file, { contentType: mimeType });
+        images.push(await dispatch('createImage', imageData));
+      }
+
+      return images;
+    },
 
     async listImages({ dispatch }) {
       return dispatch('get', { key: 'images', query: 'listImages' });

@@ -15,49 +15,59 @@ const router = new Router({
     {
       path: '/',
       name: 'home',
-      component: Home
+      component: Home,
     },
     {
       path: '/login',
       name: 'login',
-      component: () => import('./views/auth/Login.vue')
+      component: () => import('./views/auth/Login.vue'),
     },
     {
       path: '/signup',
       name: 'signup',
-      component: () => import('./views/auth/SignUp.vue')
+      component: () => import('./views/auth/SignUp.vue'),
     },
     {
       path: '/about',
       name: 'about',
-      component: () => import('./views/About.vue')
+      component: () => import('./views/About.vue'),
     },
     {
       path: '/admin',
       name: 'admin',
-      component: () => import('./views/admin/Index.vue')
+      component: () => import('./views/admin/Index.vue'),
     },
     {
       path: '/admin/thumbnails',
       name: 'adminThumbanils',
-      component: () => import('./views/admin/Thumbnails.vue')
+      component: () => import('./views/admin/Thumbnails.vue'),
+    },
+    {
+      path: '/admin/thumbnails/create',
+      name: 'adminThumbnailsCreate',
+      component: () => import('./views/admin/ThumbnailsCreate.vue'),
+    },
+    {
+      path: '/admin/thumbnails/:slug',
+      name: 'adminThumbnailsEdit',
+      component: () => import('./views/admin/ThumbnailsCreate.vue'),
     },
     {
       path: '/admin/categories',
       name: 'adminCategories',
-      component: () => import('./views/admin/Categories.vue')
+      component: () => import('./views/admin/Categories.vue'),
     },
     {
       path: '/admin/downloads',
       name: 'adminDownloads',
-      component: () => import('./views/admin/Downloads.vue')
+      component: () => import('./views/admin/Downloads.vue'),
     },
     {
       path: '/admin/images',
       name: 'adminImages',
-      component: () => import('./views/admin/Images.vue')
-    }
-  ]
+      component: () => import('./views/admin/Images.vue'),
+    },
+  ],
 });
 
 // The middleware for every page of the application.
@@ -65,7 +75,9 @@ const router = new Router({
 const globalMiddleware = [];
 
 // Load middleware modules dynamically.
-const routeMiddleware = resolveMiddleware(require.context('./middleware', false, /.*\.js$/));
+const routeMiddleware = resolveMiddleware(
+  require.context('./middleware', false, /.*\.js$/),
+);
 
 sync(store, router);
 
@@ -119,7 +131,7 @@ async function beforeEach(to, from, next) {
 
       comp.data = () => ({
         ...compData,
-        ...data
+        ...data,
       });
 
       next(...args);
@@ -128,8 +140,7 @@ async function beforeEach(to, from, next) {
     if (typeof comp.asyncData === 'function') {
       const asyncData = await comp.asyncData({ ...to, from, store });
       _next(asyncData);
-    }
-    else {
+    } else {
       next(...args);
     }
   });
@@ -173,11 +184,9 @@ function callMiddleware(middleware, to, from, next) {
 
     if (typeof middleware === 'function') {
       middleware(to, from, _next);
-    }
-    else if (routeMiddleware[middleware]) {
+    } else if (routeMiddleware[middleware]) {
       routeMiddleware[middleware](to, from, _next);
-    }
-    else {
+    } else {
       throw Error(`Undefined middleware [${middleware}]`);
     }
   };
@@ -193,9 +202,9 @@ function callMiddleware(middleware, to, from, next) {
  */
 function resolveComponents(components) {
   return Promise.all(
-    components.map((component) => {
+    components.map(component => {
       return typeof component === 'function' ? component() : component;
-    })
+    }),
   );
 }
 
@@ -206,12 +215,16 @@ function resolveComponents(components) {
  * @return {Array}
  */
 function getMiddleware(components) {
-  const middleware = [ ...globalMiddleware ];
+  const middleware = [...globalMiddleware];
 
-  components.filter((c) => (c.middleware ? c.middleware : (c.default || {}).middleware)).forEach((component) => {
-    var mw = component.middleware ? component.middleware : (component.default || {}).middleware;
-    Array.isArray(mw) ? middleware.push(...mw) : middleware.push(mw);
-  });
+  components
+    .filter(c => (c.middleware ? c.middleware : (c.default || {}).middleware))
+    .forEach(component => {
+      var mw = component.middleware
+        ? component.middleware
+        : (component.default || {}).middleware;
+      Array.isArray(mw) ? middleware.push(...mw) : middleware.push(mw);
+    });
 
   return middleware;
 }
@@ -235,7 +248,7 @@ function scrollBehavior(to, from, savedPosition) {
     return { selector: to.hash };
   }
 
-  const [ component ] = router.getMatchedComponents({ ...to }).slice(-1);
+  const [component] = router.getMatchedComponents({ ...to }).slice(-1);
 
   if (component && component.scrollToTop === false) {
     return {};
@@ -251,8 +264,8 @@ function scrollBehavior(to, from, savedPosition) {
 function resolveMiddleware(requireContext) {
   return requireContext
     .keys()
-    .map((file) => [ file.replace(/(^.\/)|(\.js$)/g, ''), requireContext(file) ])
-    .reduce((guards, [ name, guard ]) => ({ ...guards, [name]: guard.default }), {});
+    .map(file => [file.replace(/(^.\/)|(\.js$)/g, ''), requireContext(file)])
+    .reduce((guards, [name, guard]) => ({ ...guards, [name]: guard.default }), {});
 }
 
 export default router;
