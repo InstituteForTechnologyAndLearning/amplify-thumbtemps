@@ -84,6 +84,7 @@ export default {
         this.$emit("update", images);
       } catch (err) {
         console.log({ err });
+        this.isSending = false;
         this.$Toast.danger(err);
       }
     },

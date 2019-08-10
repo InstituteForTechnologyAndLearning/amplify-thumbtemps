@@ -61,6 +61,23 @@ export default {
      *
      */
 
+    async storeAndCreateDownload({ dispatch }, { downloadSource, downloadData }) {
+      if (!downloadSource) return;
+      const uuid = UtilityService.getUUID();
+      const file = downloadSource;
+      const filenameArray = [...file.name.split('.')];
+      const extension = filenameArray.pop();
+      const filename = UtilityService.slugify(filenameArray.join('-'));
+      const { type: mimeType } = file;
+      const key = `downloads/${filename}_${uuid}.${extension}`;
+      const url = `https://${bucket}.s3.${region}.amazonaws.com/public/${key}`;
+
+      downloadData.source = url;
+
+      await Storage.put(key, file, { contentType: mimeType });
+      return await dispatch('createImage', imageData);
+    },
+
     async listDownloads({ dispatch }) {
       return dispatch('get', { key: 'downloads', query: 'listDownloads' });
     },
