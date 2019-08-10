@@ -75,7 +75,7 @@ export default {
       downloadData.source = url;
 
       await Storage.put(key, file, { contentType: mimeType });
-      return await dispatch('createImage', imageData);
+      return await dispatch('createDownload', downloadData);
     },
 
     async listDownloads({ dispatch }) {
@@ -164,6 +164,30 @@ export default {
      * Thumbnail Actions
      *
      */
+
+    async listThumbnails({ dispatch }) {
+      return dispatch('get', { key: 'thumbnails', query: 'listThumbnails' });
+    },
+
+    async getThumbnail({ dispatch }, id) {
+      return dispatch('find', { key: 'thumbnail', query: 'getThumbnail', uid: { id } });
+    },
+
+    async createThumbnail({ dispatch }, input) {
+      return dispatch('post', { key: 'thumbnail', mutation: 'createThumbnail', input });
+    },
+
+    async updateThumbnail({ dispatch }, input) {
+      return dispatch('put', { key: 'thumbnail', mutation: 'updateThumbnail', input });
+    },
+
+    async deleteThumbnail({ dispatch }, input) {
+      return dispatch('destroy', {
+        key: 'thumbnail',
+        mutation: 'deleteThumbnail',
+        input,
+      });
+    },
 
     /**
      *

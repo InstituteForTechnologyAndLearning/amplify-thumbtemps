@@ -340,7 +340,7 @@ export const listThumbnails = `query ListThumbnails(
 `;
 export const thumbnailsBySlug = `query ThumbnailsBySlug(
   $slug: String
-  $releaseDate: ModelIntKeyConditionInput
+  $releaseDate: ModelStringKeyConditionInput
   $filter: ModelThumbnailFilterInput
   $limit: Int
   $nextToken: String

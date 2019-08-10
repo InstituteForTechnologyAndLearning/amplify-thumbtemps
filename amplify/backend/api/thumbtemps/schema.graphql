@@ -60,12 +60,12 @@ type Thumbnail
   title: String!
   slug: String!
   description: String!
-  releaseDate: Int!
+  releaseDate: String!
   download: Download! @connection(name: "ThumbnailDownload")
   images: [Image]! @connection(name: "ThumbnailImages")
   category: Category! @connection(name: "ThumbnailCategory")
   keywords: [ThumbnailKeyword]! @connection(name: "ThumbnailKeywordsThumbnail")
   fonts: [ThumbnailFont]! @connection(name: "ThumbnailFontsThumbnail")
-  deletedAt: Int
+  deletedAt: String
   owner: String
 }

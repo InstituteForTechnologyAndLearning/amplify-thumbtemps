@@ -2,11 +2,21 @@
   <div class="px-12 pt-6">
     <h1 class="mb-12">Adding/Editing</h1>
 
-    <form @submit.prevent="createThumbnail" class="flex flex-wrap -mx-12">
+    <form @submit.prevent="create" class="flex flex-wrap -mx-12">
       <div class="w-full md:w-3/5 px-12">
         <div class="form-group">
-          <label>Title`</label>
-          <zi-input class="w-full" v-model="form.title.value" placeholder="Title" />
+          <label>Title</label>
+          <zi-input
+            class="w-full"
+            v-model="form.title.value"
+            @input="createSlug"
+            placeholder="Title"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Slug</label>
+          <zi-input class="w-full" v-model="form.slug.value" :disabled="true" />
         </div>
 
         <div class="form-group">
@@ -29,7 +39,7 @@
           </div>
           <div class="form-group px-12">
             <label>Category</label>
-            <zi-select class="w-full" v-model="form.category.value">
+            <zi-select class="w-full" v-model="form.thumbnailCategoryId.value">
               <zi-option
                 v-for="category in $store.state.api.categories"
                 :key="category.id"
@@ -51,9 +61,12 @@
         />
         <div class="form-group">
           <label>Download Type</label>
-          <zi-select class="w-full" v-model="form.category.value">
-            <zi-option v-for="type in downloadTypes" :key="type" :value="type" :label="type"></zi-option>
-          </zi-select>
+          <zi-input
+            class="w-full"
+            v-model="downloadForm.downloadType.value"
+            placeholder="Download Type"
+            :disabled="true"
+          />
         </div>
         <div class="form-group">
           <label>File Size</label>
@@ -84,13 +97,17 @@
 <script>
 import FilePicker from "@/components/admin/FilePicker";
 import FormService from "@/services/FormService";
+import UtilityService from "@/services/UtilityService";
+import { mapActions } from "vuex";
 
 const formFields = [
   "title",
+  "slug",
   "description",
   "releaseDate",
-  "thumbnail",
-  "category"
+  "thumbnailDownloadId",
+  "thumbnailCategoryId",
+  "owner"
 ];
 
 const downloadFormFields = ["source", "fileSize", "downloadType", "owner"];
@@ -139,6 +156,8 @@ export default {
   }),
 
   methods: {
+    ...mapActions("api", ["createThumbnail", "storeAndCreateDownload"]),
+
     addDownload([file, ...others]) {
       console.log({ file });
       this.pendingDownload = file;
@@ -147,9 +166,26 @@ export default {
       this.downloadForm.owner.value = this.$store.state.user.current.username;
     },
 
-    createThumbnail(e) {
+    createSlug() {
+      this.form.slug.value = UtilityService.slugify(this.form.title.value);
+    },
+
+    async create(e) {
       try {
         this.isSending = true;
+
+        const download = await this.storeAndCreateDownload(
+          this.getDownloadData()
+        );
+
+        const thumbnailData = this.form.dispatch();
+        thumbnailData.thumbnailDownloadId = download.id;
+
+        const thumbnail = await this.createThumbnail(thumbnailData);
+
+        this.form.clear();
+        this.downloadForm.clear();
+        this.isSending = false;
       } catch (err) {
         console.log({ err });
         this.isSending = false;
@@ -160,7 +196,7 @@ export default {
     getDownloadData() {
       return {
         downloadSource: this.pendingDownload,
-        downloadData: this.form.dispatch()
+        downloadData: this.downloadForm.dispatch()
       };
     }
   }

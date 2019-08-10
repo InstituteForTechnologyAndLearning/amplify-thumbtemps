@@ -15,5 +15,22 @@
                 "thumbtemps29c934a1": {}
             }
         }
+    },
+    "rtx": {
+        "awscloudformation": {
+            "AuthRoleName": "thumbtemps-rtx-20190810102634-authRole",
+            "UnauthRoleArn": "arn:aws:iam::229397476429:role/thumbtemps-rtx-20190810102634-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::229397476429:role/thumbtemps-rtx-20190810102634-authRole",
+            "Region": "us-east-2",
+            "DeploymentBucketName": "thumbtemps-rtx-20190810102634-deployment",
+            "UnauthRoleName": "thumbtemps-rtx-20190810102634-unauthRole",
+            "StackName": "thumbtemps-rtx-20190810102634",
+            "StackId": "arn:aws:cloudformation:us-east-2:229397476429:stack/thumbtemps-rtx-20190810102634/db32bb10-bb7a-11e9-9c28-020cf0d94894"
+        },
+        "categories": {
+            "auth": {
+                "thumbtemps29c934a1": {}
+            }
+        }
     }
 }
