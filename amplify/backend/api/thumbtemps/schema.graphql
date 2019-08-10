@@ -1,77 +1,71 @@
 # Available Operations: create, update, delete, read
 
 type Category @model {
-	id: ID!
-	thumbnails: [Thumbnail]! @connection(name: "ThumbnailCategory")
-	name: String!
-	owner: String
+  id: ID!
+  thumbnails: [Thumbnail]! @connection(name: "ThumbnailCategory")
+  name: String!
+  owner: String
 }
 
 type Keyword @model {
-	id: ID!
-	thumbnails: [ThumbnailKeyword] @connection(name: "ThumbnailKeywordsKeyword")
-	name: String!
-	owner: String
+  id: ID!
+  thumbnails: [ThumbnailKeyword] @connection(name: "ThumbnailKeywordsKeyword")
+  name: String!
+  owner: String
 }
 
 type ThumbnailKeyword @model(queries: null) {
-	id: ID!
-	thumbnail: Thumbnail! @connection(name: "ThumbnailKeywordsThumbnail")
-	keyword: Keyword! @connection(name: "ThumbnailKeywordsKeyword")
-}
-
-enum DownloadType {
-	PHOTOSHOP
-	PHOTOSHOP_WITH_IMAGES
-	GIMP
-	GIMP_WITH_IMAGES
-	ZIP
+  id: ID!
+  thumbnail: Thumbnail! @connection(name: "ThumbnailKeywordsThumbnail")
+  keyword: Keyword! @connection(name: "ThumbnailKeywordsKeyword")
 }
 
 type Download @model {
-	id: ID!
-	thumbnail: Thumbnail @connection(name: "ThumbnailDownload")
-	source: String!
-	fileSize: Int!
-	downloadType: DownloadType!
-	owner: String
+  id: ID!
+  thumbnail: Thumbnail @connection(name: "ThumbnailDownload")
+  source: String!
+  fileSize: Int!
+  downloadType: String!
+  owner: String
 }
 
 type Image @model {
-	id: ID!
-	thumbnail: Thumbnail @connection(name: "ThumbnailImages")
-	title: String!
-	publisher: String!
-	source: String!
-	order: Int!
-	owner: String
+  id: ID!
+  thumbnail: Thumbnail @connection(name: "ThumbnailImages")
+  title: String!
+  publisher: String!
+  source: String!
+  order: Int!
+  owner: String
 }
 
 type Font @model {
-	id: ID!
-	thumbnails: [ThumbnailFont] @connection(name: "ThumbnailFontsFont")
-	name: String!
-	source: String!
-	owner: String
+  id: ID!
+  thumbnails: [ThumbnailFont] @connection(name: "ThumbnailFontsFont")
+  name: String!
+  source: String!
+  owner: String
 }
 
 type ThumbnailFont @model(queries: null) {
-	id: ID!
-	thumbnail: Thumbnail! @connection(name: "ThumbnailFontsThumbnail")
-	font: Font! @connection(name: "ThumbnailFontsFont")
+  id: ID!
+  thumbnail: Thumbnail! @connection(name: "ThumbnailFontsThumbnail")
+  font: Font! @connection(name: "ThumbnailFontsFont")
 }
 
-type Thumbnail @model @key(name: "BySlug", fields: ["slug", "releaseDate"], queryField: "thumbnailsBySlug") {
-	id: ID!
-	title: String!
-	slug: String!
-	description: String!
-	releaseDate: Int!
-	download: Download! @connection(name: "ThumbnailDownload")
-	images: [Image]! @connection(name: "ThumbnailImages")
-	category: Category! @connection(name: "ThumbnailCategory")
-	keywords: [ThumbnailKeyword]! @connection(name: "ThumbnailKeywordsThumbnail")
-	fonts: [ThumbnailFont]! @connection(name: "ThumbnailFontsThumbnail")
-	deletedAt: Int
-	owner: String
+type Thumbnail
+  @model
+  @key(name: "BySlug", fields: ["slug", "releaseDate"], queryField: "thumbnailsBySlug") {
+  id: ID!
+  title: String!
+  slug: String!
+  description: String!
+  releaseDate: Int!
+  download: Download! @connection(name: "ThumbnailDownload")
+  images: [Image]! @connection(name: "ThumbnailImages")
+  category: Category! @connection(name: "ThumbnailCategory")
+  keywords: [ThumbnailKeyword]! @connection(name: "ThumbnailKeywordsThumbnail")
+  fonts: [ThumbnailFont]! @connection(name: "ThumbnailFontsThumbnail")
+  deletedAt: Int
+  owner: String
 }
