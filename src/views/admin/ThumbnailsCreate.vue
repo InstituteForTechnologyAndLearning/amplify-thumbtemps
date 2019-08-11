@@ -19,15 +19,6 @@
           <zi-input class="w-full" v-model="form.slug.value" :disabled="true" />
         </div>
 
-        <div class="form-group">
-          <label>Description</label>
-          <textarea
-            class="zi-input w-full h-40 m-0"
-            rows="5"
-            v-model="form.description.value"
-            placeholder="Description"
-          ></textarea>
-        </div>
         <div class="flex justify-start -mx-12">
           <div class="form-group px-12">
             <label>Release Date</label>
@@ -48,6 +39,16 @@
               ></zi-option>
             </zi-select>
           </div>
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea
+            class="zi-input w-full h-40 m-0"
+            rows="5"
+            v-model="form.description.value"
+            placeholder="Description"
+          ></textarea>
         </div>
       </div>
 
@@ -85,6 +86,21 @@
             placeholder="Owner"
             :disabled="true"
           />
+        </div>
+
+        <div class="form-group">
+          <label>Keywords</label>
+          <multiselect
+            v-model="keywords"
+            tag-placeholder="Add this as new keyword"
+            placeholder="Search or add a keyword"
+            label="name"
+            track-by="id"
+            :options="keywordOptions"
+            :multiple="true"
+            :taggable="true"
+            @tag="addKeyword"
+          ></multiselect>
         </div>
       </div>
       <div class="w-full p-12">
@@ -132,8 +148,10 @@ export default {
   async asyncData({ store }) {
     try {
       await store.cache.dispatch("api/listCategories");
+      const keywordOptions = await store.cache.dispatch("api/listKeywords");
+      return { keywordOptions };
     } catch (err) {
-      store.dispatch("alert/danger", "Failed to load categories");
+      store.dispatch("alert/danger", "Some data failed to load");
     }
   },
 
@@ -150,13 +168,27 @@ export default {
   data: () => ({
     pendingDownload: null,
     isSending: false,
+    keywords: [],
     form: FormService.createForm(formFields),
     downloadForm: FormService.createForm(downloadFormFields),
     downloadTypes: downloadTypes
   }),
 
   methods: {
-    ...mapActions("api", ["createThumbnail", "storeAndCreateDownload"]),
+    ...mapActions("api", [
+      "createThumbnail",
+      "createKeyword",
+      "createThumbnailKeyword",
+      "storeAndCreateDownload"
+    ]),
+
+    addKeyword(newKeyword) {
+      let keyword = {
+        name: newKeyword
+      };
+      this.keywordOptions.push(keyword);
+      this.keywords.push(keyword);
+    },
 
     addDownload([file, ...others]) {
       console.log({ file });
@@ -173,15 +205,57 @@ export default {
     async create(e) {
       try {
         this.isSending = true;
+        const thumbnailData = this.form.dispatch();
+        const keywords = this.keywords;
 
+        // save keywords
+        const newKeywords = keywords.filter(k => !k.id);
+        const savedKeywords = keywords.filter(k => k.id);
+        let hasKeywordFailed = false;
+        for (let i = 0; i < newKeywords.length; i++) {
+          try {
+            const keyword = await this.createKeyword(newKeywords[i]);
+            savedKeywords.push(keyword);
+          } catch (err) {
+            hasKeywordFailed = true;
+          }
+        }
+
+        if (hasKeywordFailed) {
+          this.$Toast.danger("One or more keywords failed to create");
+        }
+
+        // save fonts
+
+        // save download
         const download = await this.storeAndCreateDownload(
           this.getDownloadData()
         );
 
-        const thumbnailData = this.form.dispatch();
+        // save thumbnail
         thumbnailData.thumbnailDownloadId = download.id;
-
+        thumbnailData.owner = this.$store.state.user.current.username;
         const thumbnail = await this.createThumbnail(thumbnailData);
+
+        // create thumbnail relationships
+        let hasThumbnailKeywordFailed = false;
+        for (let i = 0; i < savedKeywords.length; i++) {
+          try {
+            let data = {
+              thumbnailKeywordThumbnailId: thumbnail.id,
+              thumbnailKeywordKeywordId: savedKeywords[i].id
+            };
+            const thumbnailKeyword = await this.createThumbnailKeyword(data);
+          } catch (err) {
+            hasThumbnailKeywordFailed = true;
+          }
+        }
+
+        if (hasThumbnailKeywordFailed) {
+          this.$Toast.danger(
+            "One or more keywords failed to attach to the thumbnail"
+          );
+        }
 
         this.form.clear();
         this.downloadForm.clear();

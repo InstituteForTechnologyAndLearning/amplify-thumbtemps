@@ -11,7 +11,7 @@
         </router-link>
       </div>
 
-      <zi-table :data="$store.state.api.thumbnails" empty-text="No images :(">
+      <zi-table :data="$store.state.api.thumbnails" empty-text="No thumbnails :(">
         <zi-table-column label="Title">
           <template slot-scope="scope">
             <div class="flex items-center py-3">
@@ -53,9 +53,9 @@ export default {
 
   async asyncData({ store }) {
     try {
-      await store.cache.dispatch("api/listImages");
+      await store.cache.dispatch("api/listThumbnails");
     } catch (err) {
-      store.dispatch("alert/danger", "Failed to load categories");
+      store.dispatch("alert/danger", "Failed to load thumbnails");
     }
   },
 

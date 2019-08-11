@@ -21,6 +21,8 @@ export default {
     image: null,
     thumbnails: [],
     thumbnail: null,
+    keywords: [],
+    keyword: null,
   },
   getters: {},
   mutations: {
@@ -153,6 +155,34 @@ export default {
      *
      */
 
+    async listKeywords({ dispatch }) {
+      return dispatch('get', { key: 'keywords', query: 'listKeywords' });
+    },
+
+    async getKeyword({ dispatch }, id) {
+      return dispatch('find', { key: 'keyword', query: 'getKeyword', uid: { id } });
+    },
+
+    async createKeyword({ dispatch }, input) {
+      return dispatch('post', { key: 'keyword', mutation: 'createKeyword', input });
+    },
+
+    async updateKeyword({ dispatch }, input) {
+      return dispatch('put', { key: 'keyword', mutation: 'updateKeyword', input });
+    },
+
+    async deleteKeyword({ dispatch }, input) {
+      return dispatch('destroy', { key: 'keyword', mutation: 'deleteKeyword', input });
+    },
+
+    async createThumbnailKeyword({ dispatch }, input) {
+      return dispatch('post', { mutation: 'createThumbnailKeyword', input });
+    },
+
+    async deleteThumbnailKeyword({ dispatch }, id) {
+      return dispatch('post', { mutation: 'deleteThumbnailKeyword', id });
+    },
+
     /**
      *
      * Font Actions
@@ -200,35 +230,35 @@ export default {
     async get({ commit }, { key, query }) {
       const { data } = await ApiService.get(queries[query]);
       const value = data[query].items;
-      commit('set', { key, value });
+      if (key) commit('set', { key, value });
       return value;
     },
 
     async find({ commit }, { key, query, uid }) {
       const { data } = await ApiService.find(queries[query], uid);
       const value = data[query];
-      commit('set', { key, value });
+      if (key) commit('set', { key, value });
       return value;
     },
 
     async post({ commit }, { key, mutation, input }) {
       const { data } = await ApiService.post(mutations[mutation], { input });
       const value = data[mutation];
-      commit('set', { key, value });
+      if (key) commit('set', { key, value });
       return value;
     },
 
     async put({ commit }, { key, mutation, input }) {
       const { data } = await ApiService.put(mutations[mutation], { input });
       const value = data[mutation];
-      commit('set', { key, value });
+      if (key) commit('set', { key, value });
       return value;
     },
 
     async destroy({ commit }, { key, mutation, input }) {
       const { data } = await ApiService.destroy(mutations[mutation], { input });
       const value = data[mutation];
-      commit('set', { key, value });
+      if (key) commit('set', { key, value });
       return value;
     },
   },

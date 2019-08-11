@@ -9,6 +9,8 @@ import VueMouseParallax from 'vue-mouse-parallax';
 import Gravatar from 'vue-gravatar';
 import Datetime from 'vue-datetime';
 import 'vue-datetime/dist/vue-datetime.css';
+import Multiselect from 'vue-multiselect';
+import 'vue-multiselect/dist/vue-multiselect.min.css';
 import ZeitUI from '@zeit-ui/vue';
 import '@zeit-ui/vue/dist/zeit-ui.css';
 import './assets/styles/global.scss';
@@ -26,6 +28,7 @@ Vue.use(Datetime);
 Vue.use(ZeitUI);
 
 Vue.component('v-gravatar', Gravatar);
+Vue.component('multiselect', Multiselect);
 
 new Vue({
   el: '#app',
