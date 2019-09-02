@@ -102,15 +102,31 @@
             @tag="addKeyword"
           ></multiselect>
         </div>
+
+        <div class="form-group">
+          <button
+            type="button"
+            class="zi-btn ghost primary medium"
+            @click="isManagingImages = true"
+            ghost
+          >Manage Images</button>
+        </div>
       </div>
       <div class="w-full p-12">
         <zi-button type="primary" :loading="isSending" auto>Create</zi-button>
       </div>
     </form>
+    <ImageManager
+      v-show="isManagingImages"
+      ref="imageManager"
+      v-model="pendingImages"
+      :auto-upload="false"
+    />
   </div>
 </template>
 
 <script>
+import ImageManager from "@/components/admin/ImageManager";
 import FilePicker from "@/components/admin/FilePicker";
 import FormService from "@/services/FormService";
 import UtilityService from "@/services/UtilityService";
@@ -156,6 +172,7 @@ export default {
   },
 
   components: {
+    ImageManager,
     FilePicker
   },
 
@@ -171,7 +188,9 @@ export default {
     keywords: [],
     form: FormService.createForm(formFields),
     downloadForm: FormService.createForm(downloadFormFields),
-    downloadTypes: downloadTypes
+    downloadTypes: downloadTypes,
+    pendingImages: [],
+    isManagingImages: false
   }),
 
   methods: {

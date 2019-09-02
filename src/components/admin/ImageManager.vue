@@ -82,6 +82,7 @@ export default {
         this.form.clear();
         this.isSending = false;
         this.$emit("update", images);
+        this.$emit("input", images);
       } catch (err) {
         console.log({ err });
         this.isSending = false;

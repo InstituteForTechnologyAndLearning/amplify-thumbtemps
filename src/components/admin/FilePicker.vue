@@ -1,7 +1,7 @@
 <template>
   <div class="w-full">
     <input
-      id="file"
+      :id="identifier"
       name="file"
       :class="`file-drop ${fileIsHovered ? 'is-hovered' : ''}`"
       type="file"
@@ -9,9 +9,9 @@
       :value="value"
       @change="handleAdd"
       multiple
-    >
+    />
     <label
-      for="file"
+      :for="identifier"
       @dragover.prevent
       @drop.prevent="handleDrop"
       @dragenter="fileIsHovered = true"
@@ -27,6 +27,8 @@
 </template>
 
 <script>
+import UtilityService from "@/services/UtilityService";
+
 export default {
   props: {
     placeholder: {
@@ -52,6 +54,7 @@ export default {
   },
 
   data: () => ({
+    identifier: UtilityService.getUUID(),
     fileIsHovered: false,
     invalidFiles: []
   }),
